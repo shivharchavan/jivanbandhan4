@@ -1,0 +1,510 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|c:\\users\\hp\\source\\repos\\jivanbandhan4\\login.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:login.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\login.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:login.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\dashboard.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:dashboard.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\dashboard.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:dashboard.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\viewuserprofile.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:viewuserprofile.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\viewuserprofile.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:viewuserprofile.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\shortlisted.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:shortlisted.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\shortlisted.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:shortlisted.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|c:\\users\\hp\\source\\repos\\jivanbandhan4\\searchprofiles.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:searchprofiles.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\myprofile.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:myprofile.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|c:\\users\\hp\\source\\repos\\jivanbandhan4\\messages.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:messages.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|c:\\users\\hp\\source\\repos\\jivanbandhan4\\messages.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:messages.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\membership.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:membership.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\matches.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:matches.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\matches.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:matches.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\interests.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:interests.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\interests.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:interests.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\home.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:home.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|c:\\users\\hp\\source\\repos\\jivanbandhan4\\default.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:default.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\default.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:default.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\masterpage.master||{B30AFBFF-D992-43B7-B62D-2642580A2883}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:masterpage.master||{B30AFBFF-D992-43B7-B62D-2642580A2883}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\membership.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:membership.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\myprofile.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:myprofile.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\masterpage.master.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:masterpage.master.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\registrations.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:registrations.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\registrations.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:registrations.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\searchprofiles.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:searchprofiles.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|C:\\Users\\hp\\source\\repos\\JivanBandhan4\\home.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5CB48290-FB7D-4D3C-9996-1FB14E77E8BE}|JivanBandhan4.csproj|solutionrelative:home.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ViewUserProfile.aspx",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\ViewUserProfile.aspx",
+              "RelativeDocumentMoniker": "ViewUserProfile.aspx",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\ViewUserProfile.aspx",
+              "RelativeToolTip": "ViewUserProfile.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2025-11-02T12:57:48.868Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ViewUserProfile.aspx.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\ViewUserProfile.aspx.cs",
+              "RelativeDocumentMoniker": "ViewUserProfile.aspx.cs",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\ViewUserProfile.aspx.cs",
+              "RelativeToolTip": "ViewUserProfile.aspx.cs",
+              "ViewState": "AgIAAGwCAAAAAAAAAAAUwHQCAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-02T13:07:02.691Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Dashboard.aspx",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Dashboard.aspx",
+              "RelativeDocumentMoniker": "Dashboard.aspx",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Dashboard.aspx",
+              "RelativeToolTip": "Dashboard.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2025-11-07T03:24:49.039Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Dashboard.aspx.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Dashboard.aspx.cs",
+              "RelativeDocumentMoniker": "Dashboard.aspx.cs",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Dashboard.aspx.cs",
+              "RelativeToolTip": "Dashboard.aspx.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-07T03:25:03.021Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Login.aspx",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Login.aspx",
+              "RelativeDocumentMoniker": "Login.aspx",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Login.aspx",
+              "RelativeToolTip": "Login.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2025-11-09T08:49:49.845Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Login.aspx.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Login.aspx.cs",
+              "RelativeDocumentMoniker": "Login.aspx.cs",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Login.aspx.cs",
+              "RelativeToolTip": "Login.aspx.cs",
+              "ViewState": "AgIAAEUBAAAAAAAAAAAUwEoBAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-09T09:03:46.719Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Shortlisted.aspx.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Shortlisted.aspx.cs",
+              "RelativeDocumentMoniker": "Shortlisted.aspx.cs",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Shortlisted.aspx.cs",
+              "RelativeToolTip": "Shortlisted.aspx.cs",
+              "ViewState": "AgIAANwAAAAAAAAAAADwv+IAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-06T21:35:42.225Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Shortlisted.aspx",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Shortlisted.aspx",
+              "RelativeDocumentMoniker": "Shortlisted.aspx",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Shortlisted.aspx",
+              "RelativeToolTip": "Shortlisted.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2025-11-06T21:34:59.827Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "SearchProfiles.aspx",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\SearchProfiles.aspx",
+              "RelativeDocumentMoniker": "SearchProfiles.aspx",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\SearchProfiles.aspx",
+              "RelativeToolTip": "SearchProfiles.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2025-11-09T12:04:09.631Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Messages.aspx.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Messages.aspx.cs",
+              "RelativeDocumentMoniker": "Messages.aspx.cs",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Messages.aspx.cs",
+              "RelativeToolTip": "Messages.aspx.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-09T12:03:32.209Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Messages.aspx",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Messages.aspx",
+              "RelativeDocumentMoniker": "Messages.aspx",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Messages.aspx",
+              "RelativeToolTip": "Messages.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2025-11-09T12:02:57.784Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Matches.aspx",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Matches.aspx",
+              "RelativeDocumentMoniker": "Matches.aspx",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Matches.aspx",
+              "RelativeToolTip": "Matches.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2025-11-06T19:14:14.642Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Interests.aspx.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Interests.aspx.cs",
+              "RelativeDocumentMoniker": "Interests.aspx.cs",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Interests.aspx.cs",
+              "RelativeToolTip": "Interests.aspx.cs",
+              "ViewState": "AgIAAH4CAAAAAAAAAAAswIwCAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-02T06:44:02.625Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Interests.aspx",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Interests.aspx",
+              "RelativeDocumentMoniker": "Interests.aspx",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Interests.aspx",
+              "RelativeToolTip": "Interests.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2025-11-02T06:43:26.699Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Home.aspx",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Home.aspx",
+              "RelativeDocumentMoniker": "Home.aspx",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Home.aspx",
+              "RelativeToolTip": "Home.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2025-11-08T03:06:39.04Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "MyProfile.aspx",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\MyProfile.aspx",
+              "RelativeDocumentMoniker": "MyProfile.aspx",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\MyProfile.aspx",
+              "RelativeToolTip": "MyProfile.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2025-11-02T05:46:41.495Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "Default.aspx.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Default.aspx.cs",
+              "RelativeDocumentMoniker": "Default.aspx.cs",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Default.aspx.cs",
+              "RelativeToolTip": "Default.aspx.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-09T12:01:29.284Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Matches.aspx.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Matches.aspx.cs",
+              "RelativeDocumentMoniker": "Matches.aspx.cs",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Matches.aspx.cs",
+              "RelativeToolTip": "Matches.aspx.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-06T19:15:22.031Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Membership.aspx",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Membership.aspx",
+              "RelativeDocumentMoniker": "Membership.aspx",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Membership.aspx",
+              "RelativeToolTip": "Membership.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2025-11-02T23:30:57.586Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "MasterPage.Master",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\MasterPage.Master",
+              "RelativeDocumentMoniker": "MasterPage.Master",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\MasterPage.Master",
+              "RelativeToolTip": "MasterPage.Master",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2025-11-02T05:33:24.206Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "Default.aspx",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Default.aspx",
+              "RelativeDocumentMoniker": "Default.aspx",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Default.aspx",
+              "RelativeToolTip": "Default.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2025-11-03T04:19:55.262Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "Membership.aspx.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Membership.aspx.cs",
+              "RelativeDocumentMoniker": "Membership.aspx.cs",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Membership.aspx.cs",
+              "RelativeToolTip": "Membership.aspx.cs",
+              "ViewState": "AgIAAB4CAAAAAAAAAAAUwCsCAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-02T23:31:41.649Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "MyProfile.aspx.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\MyProfile.aspx.cs",
+              "RelativeDocumentMoniker": "MyProfile.aspx.cs",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\MyProfile.aspx.cs",
+              "RelativeToolTip": "MyProfile.aspx.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAAABkAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-02T05:47:25.458Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "MasterPage.Master.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\MasterPage.Master.cs",
+              "RelativeDocumentMoniker": "MasterPage.Master.cs",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\MasterPage.Master.cs",
+              "RelativeToolTip": "MasterPage.Master.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAAAAwAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-02T05:34:39.306Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "Registrations.aspx.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Registrations.aspx.cs",
+              "RelativeDocumentMoniker": "Registrations.aspx.cs",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Registrations.aspx.cs",
+              "RelativeToolTip": "Registrations.aspx.cs",
+              "ViewState": "AgIAAGkBAAAAAAAAAAAUwG0BAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-07T09:49:54.832Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "Registrations.aspx",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Registrations.aspx",
+              "RelativeDocumentMoniker": "Registrations.aspx",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Registrations.aspx",
+              "RelativeToolTip": "Registrations.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2025-11-02T05:39:38.918Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "Web.config",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Web.config",
+              "RelativeDocumentMoniker": "Web.config",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Web.config",
+              "RelativeToolTip": "Web.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2025-11-03T13:42:56.035Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "SearchProfiles.aspx.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\SearchProfiles.aspx.cs",
+              "RelativeDocumentMoniker": "SearchProfiles.aspx.cs",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\SearchProfiles.aspx.cs",
+              "RelativeToolTip": "SearchProfiles.aspx.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-05T04:07:23.399Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "Home.aspx.cs",
+              "DocumentMoniker": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Home.aspx.cs",
+              "RelativeDocumentMoniker": "Home.aspx.cs",
+              "ToolTip": "C:\\Users\\hp\\source\\repos\\JivanBandhan4\\Home.aspx.cs",
+              "RelativeToolTip": "Home.aspx.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAYwB4AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-02T05:36:52.5Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

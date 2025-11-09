@@ -1,0 +1,385 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MasterPage.master.cs" Inherits="JivanBandhan4.MasterPage" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title><asp:ContentPlaceHolder ID="TitleContent" runat="server" /></title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+        .navbar-nav .nav-item {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .dropdown-item {
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            color: #8B0000;
+        }
+
+        .marathi-font {
+            font-family: 'Nirmala UI', 'Noto Sans Devanagari', sans-serif;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.8rem;
+        }
+        
+        .main-container {
+            min-height: calc(100vh - 160px);
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px 0;
+            margin-top: auto;
+        }
+
+        .language-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .language-btn:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+    </style>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</head>
+<body  id="masterBody" runat="server">
+    <form id="form1" runat="server">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #d63384 0%, #8b0000 100%);">
+            <div class="container">
+                <a class="navbar-brand" href="Default.aspx">
+                    💑 <asp:Literal ID="litBrandName" runat="server" Text="JivanBandhan Matrimony"></asp:Literal>
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="Default.aspx"><i class="fas fa-home"></i> <asp:Literal ID="litHome" runat="server" Text="Home"></asp:Literal></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="BrowseProfiles.aspx"><i class="fas fa-users"></i> <asp:Literal ID="litBrowseProfiles" runat="server" Text="Browse Profiles"></asp:Literal></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Membership.aspx"><i class="fas fa-crown"></i> <asp:Literal ID="litMembership" runat="server" Text="Membership"></asp:Literal></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Contact.aspx"><i class="fas fa-phone"></i> <asp:Literal ID="litContact" runat="server" Text="Contact"></asp:Literal></a>
+                        </li>
+                    </ul>
+                    
+                    <ul class="navbar-nav">
+                        <!-- Language Switch Button -->
+                        <li class="nav-item">
+                            <asp:Button ID="btnLanguage" runat="server" CssClass="language-btn me-3" 
+                                      OnClick="btnLanguage_Click" Text="मराठी" />
+                        </li>
+                        
+                        <asp:Panel ID="pnlLoggedIn" runat="server" Visible="false">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user"></i> 
+                                    <asp:Label ID="lblUserName" runat="server" Text=""></asp:Label>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="Dashboard.aspx"><i class="fas fa-tachometer-alt"></i> <asp:Literal ID="litDashboard" runat="server" Text="Dashboard"></asp:Literal></a></li>
+                                    <li><a class="dropdown-item" href="MyProfile.aspx"><i class="fas fa-user-edit"></i> <asp:Literal ID="litMyProfile" runat="server" Text="My Profile"></asp:Literal></a></li>
+                                    <li><a class="dropdown-item" href="Settings.aspx"><i class="fas fa-cog"></i> <asp:Literal ID="litSettings" runat="server" Text="Settings"></asp:Literal></a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <asp:LinkButton ID="btnLogout" runat="server" CssClass="dropdown-item" OnClick="btnLogout_Click">
+                                            <i class="fas fa-sign-out-alt"></i> <asp:Literal ID="litLogout" runat="server" Text="Logout"></asp:Literal>
+                                        </asp:LinkButton>
+                                    </li>
+                                </ul>
+                            </li>
+                        </asp:Panel>
+                        
+                        <asp:Panel ID="pnlLoggedOut" runat="server" Visible="false">
+                            <li class="nav-item">
+                                <a class="nav-link" href="Login.aspx"><i class="fas fa-sign-in-alt"></i> <asp:Literal ID="litLogin" runat="server" Text="Login"></asp:Literal></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-outline-light ms-2" href="Registrations.aspx"><asp:Literal ID="litRegister" runat="server" Text="Register"></asp:Literal></a>
+                            </li>
+                        </asp:Panel>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server" />
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5>💑 <asp:Literal ID="litFooterBrand" runat="server" Text="JivanBandhan Matrimony"></asp:Literal></h5>
+                        <p><asp:Literal ID="litFooterTagline" runat="server" Text="Find your ideal partner with trust and dedication"></asp:Literal></p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6><asp:Literal ID="litQuickLinks" runat="server" Text="Quick Links"></asp:Literal></h6>
+                        <ul class="list-unstyled">
+                            <li><a href="About.aspx" class="text-light"><asp:Literal ID="litAboutUs" runat="server" Text="About Us"></asp:Literal></a></li>
+                            <li><a href="SuccessStories.aspx" class="text-light"><asp:Literal ID="litSuccessStories" runat="server" Text="Success Stories"></asp:Literal></a></li>
+                            <li><a href="Privacy.aspx" class="text-light"><asp:Literal ID="litPrivacy" runat="server" Text="Privacy Policy"></asp:Literal></a></li>
+                            <li><a href="Terms.aspx" class="text-light"><asp:Literal ID="litTerms" runat="server" Text="Terms of Use"></asp:Literal></a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6><asp:Literal ID="litContactFooter" runat="server" Text="Contact"></asp:Literal></h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-phone"></i> +91 8767243124</li>
+                            <li><i class="fas fa-envelope"></i> support@jivanbandhan.com</li>
+                            <li><i class="fas fa-map-marker-alt"></i> <asp:Literal ID="litAddress" runat="server" Text="Pune, Maharashtra"></asp:Literal></li>
+                        </ul>
+                    </div>
+                </div>
+                <hr class="my-4" style="background: rgba(255,255,255,0.1);">
+                <div class="text-center">
+                    <p>&copy; 2025 <asp:Literal ID="litCopyright" runat="server" Text="JivanBandhan Matrimony. All rights reserved."></asp:Literal></p>
+                </div>
+            </div>
+        </footer>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <asp:ContentPlaceHolder ID="ScriptContent" runat="server" />
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<%--
+
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="MasterPage.master.cs" Inherits="JivanBandhan4.MasterPage" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title><asp:ContentPlaceHolder ID="TitleContent" runat="server" /></title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+        /* Example for menu spacing */
+        .navbar-nav .nav-item {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .dropdown-item {
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            color: #8B0000;
+        }
+
+        .marathi-font {
+            font-family: 'Nirmala UI', 'Noto Sans Devanagari', sans-serif;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.8rem;
+        }
+        
+        .main-container {
+            min-height: calc(100vh - 160px);
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px 0;
+            margin-top: auto;
+        }
+    </style>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</head>
+<body>
+    <form id="form1" runat="server">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #d63384 0%, #8b0000 100%);">
+            <div class="container">
+                <a class="navbar-brand" href="Default.aspx">
+                    💑 JivanBandhan Matrimony
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="Default.aspx"><i class="fas fa-home"></i> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="BrowseProfiles.aspx"><i class="fas fa-users"></i> Browse Profiles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Membership.aspx"><i class="fas fa-crown"></i> Membership</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Contact.aspx"><i class="fas fa-phone"></i> Contact</a>
+                        </li>
+                    </ul>
+                    
+                    <ul class="navbar-nav">
+                        <asp:Panel ID="pnlLoggedIn" runat="server" Visible="false">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user"></i> 
+                                    <asp:Label ID="lblUserName" runat="server" Text=""></asp:Label>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="Dashboard.aspx"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                                    <li><a class="dropdown-item" href="MyProfile.aspx"><i class="fas fa-user-edit"></i> My Profile</a></li>
+                                    <li><a class="dropdown-item" href="Settings.aspx"><i class="fas fa-cog"></i> Settings</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <asp:LinkButton ID="btnLogout" runat="server" CssClass="dropdown-item" OnClick="btnLogout_Click">
+                                            <i class="fas fa-sign-out-alt"></i> Logout
+                                        </asp:LinkButton>
+                                    </li>
+                                </ul>
+                            </li>
+                        </asp:Panel>
+                        
+                        <asp:Panel ID="pnlLoggedOut" runat="server" Visible="false">
+                            <li class="nav-item">
+                                <a class="nav-link" href="Login.aspx"><i class="fas fa-sign-in-alt"></i> Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-outline-light ms-2" href="Registrations.aspx">Register</a>
+                            </li>
+                        </asp:Panel>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server" />
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5>💑 JivanBandhan Matrimony</h5>
+                        <p>Find your ideal partner with trust and dedication</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Quick Links</h6>
+                        <ul class="list-unstyled">
+                            <li><a href="About.aspx" class="text-light">About Us</a></li>
+                            <li><a href="SuccessStories.aspx" class="text-light">Success Stories</a></li>
+                            <li><a href="Privacy.aspx" class="text-light">Privacy Policy</a></li>
+                            <li><a href="Terms.aspx" class="text-light">Terms of Use</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Contact</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-phone"></i> +91 8767243124</li>
+                            <li><i class="fas fa-envelope"></i> support@jivanbandhan.com</li>
+                            <li><i class="fas fa-map-marker-alt"></i> Pune, Maharashtra</li>
+                        </ul>
+                    </div>
+                </div>
+                <hr class="my-4" style="background: rgba(255,255,255,0.1);">
+                <div class="text-center">
+                    <p>&copy; 2025 JivanBandhan Matrimony. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <asp:ContentPlaceHolder ID="ScriptContent" runat="server" />
+</body>
+</html>
+--%>
