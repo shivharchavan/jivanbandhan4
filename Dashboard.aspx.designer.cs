@@ -78,6 +78,15 @@ namespace JivanBandhan4
         protected global::System.Web.UI.WebControls.Label lblUserFullName;
 
         /// <summary>
+        /// userMembershipTag control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl userMembershipTag;
+
+        /// <summary>
         /// lblUserAgeOccupation control.
         /// </summary>
         /// <remarks>
@@ -267,6 +276,15 @@ namespace JivanBandhan4
         protected global::System.Web.UI.WebControls.DropDownList ddlEducation;
 
         /// <summary>
+        /// ddlReligion control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlReligion;
+
+        /// <summary>
         /// btnSearch control.
         /// </summary>
         /// <remarks>
@@ -319,5 +337,14 @@ namespace JivanBandhan4
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hdnCurrentUserGender;
+
+        /// <summary>
+        /// hdnCurrentUserMembership control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hdnCurrentUserMembership;
     }
 }

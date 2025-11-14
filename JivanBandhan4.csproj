@@ -89,6 +89,7 @@
     <Content Include="Registrations.aspx" />
     <Content Include="SearchProfiles.aspx" />
     <Content Include="Shortlisted.aspx" />
+    <Content Include="TotalViews.aspx" />
     <Content Include="ViewUserProfile.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -187,6 +188,13 @@
     </Compile>
     <Compile Include="Shortlisted.aspx.designer.cs">
       <DependentUpon>Shortlisted.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TotalViews.aspx.cs">
+      <DependentUpon>TotalViews.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TotalViews.aspx.designer.cs">
+      <DependentUpon>TotalViews.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewUserProfile.aspx.cs">
       <DependentUpon>ViewUserProfile.aspx</DependentUpon>

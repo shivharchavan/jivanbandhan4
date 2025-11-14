@@ -395,7 +395,6 @@
                             <asp:ListItem Value="">-- Select --</asp:ListItem>
                             <asp:ListItem Value="Male">Male</asp:ListItem>
                             <asp:ListItem Value="Female">Female</asp:ListItem>
-                            <asp:ListItem Value="Other">Other</asp:ListItem>
                         </asp:DropDownList>
                     </div>
                 </div>

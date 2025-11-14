@@ -7,6 +7,7 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using Newtonsoft.Json;
 
 namespace JivanBandhan4
 {
@@ -30,6 +31,7 @@ namespace JivanBandhan4
                         LoadUserPhotos(viewedUserID);
                         UpdateProfileViewCount(viewedUserID);
                         CheckUserActions(Convert.ToInt32(Session["UserID"]), viewedUserID);
+                        CheckPlatinumMembershipAndShowContact(Convert.ToInt32(Session["UserID"]), viewedUserID);
                     }
                     else
                     {
@@ -77,15 +79,18 @@ namespace JivanBandhan4
                             // Set basic information
                             lblFullName.Text = reader["FullName"].ToString();
                             lblPersonalFullName.Text = reader["FullName"].ToString();
+                            lblFlipName.Text = reader["FullName"].ToString();
 
                             // Age
                             if (reader["Age"] != DBNull.Value)
                             {
                                 lblAge.Text = reader["Age"].ToString();
+                                lblFlipAge.Text = reader["Age"].ToString();
                             }
                             else
                             {
                                 lblAge.Text = "Not specified";
+                                lblFlipAge.Text = "Not specified";
                             }
 
                             // Height
@@ -100,13 +105,19 @@ namespace JivanBandhan4
                             // Location
                             string city = reader["City"] != DBNull.Value ? reader["City"].ToString() : "";
                             string state = reader["State"] != DBNull.Value ? reader["State"].ToString() : "";
-                            lblLocation.Text = $"{city}, {state}";
+                            string country = reader["Country"] != DBNull.Value ? reader["Country"].ToString() : "";
+                            lblLocation.Text = !string.IsNullOrEmpty(city) ? $"{city}, {state}" : "Not specified";
+                            lblFlipLocation.Text = lblLocation.Text;
 
                             // Occupation and Education
                             lblOccupation.Text = reader["Occupation"] != DBNull.Value ? reader["Occupation"].ToString() : "Not specified";
                             lblCareerOccupation.Text = lblOccupation.Text;
+                            lblFlipOccupation.Text = lblOccupation.Text;
                             lblEducation.Text = reader["Education"] != DBNull.Value ? reader["Education"].ToString() : "Not specified";
                             lblHighestEducation.Text = lblEducation.Text;
+
+                            // Phone Number - Directly from database
+                            lblPhone.Text = reader["Phone"] != DBNull.Value ? reader["Phone"].ToString() : "Not specified";
 
                             // Profile ID
                             lblProfileID.Text = "MB" + userID.ToString("D4");
@@ -208,14 +219,14 @@ namespace JivanBandhan4
                         if (photos.Count > 0)
                         {
                             // Store photos in hidden field for JavaScript
-                            hdnUserPhotos.Value = Newtonsoft.Json.JsonConvert.SerializeObject(photos);
+                            hdnUserPhotos.Value = JsonConvert.SerializeObject(photos);
 
                             // Generate HTML for photo gallery
                             StringBuilder galleryHtml = new StringBuilder();
                             for (int i = 0; i < photos.Count; i++)
                             {
                                 galleryHtml.Append($@"
-                                    <div class='gallery-item' onclick='openModal({i})'>
+                                    <div class='gallery-item'>
                                         <img src='{photos[i].Url}' alt='{photos[i].Title}' class='gallery-photo' 
                                              onerror='this.src=""Images/default-profile.jpg""' />
                                         <div class='photo-overlay'>
@@ -391,6 +402,88 @@ namespace JivanBandhan4
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("CheckUserActions error: " + ex.Message);
+            }
+        }
+
+        private void CheckPlatinumMembershipAndShowContact(int currentUserID, int viewedUserID)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    // Get current user's membership
+                    string membershipQuery = @"SELECT ISNULL(MembershipType, 'Free') as MembershipType 
+                                             FROM UserMemberships 
+                                             WHERE UserID = @CurrentUserID AND ExpiryDate > GETDATE()";
+
+                    string currentUserMembership = "Free";
+                    using (SqlCommand membershipCmd = new SqlCommand(membershipQuery, conn))
+                    {
+                        membershipCmd.Parameters.AddWithValue("@CurrentUserID", currentUserID);
+                        object result = membershipCmd.ExecuteScalar();
+                        if (result != null)
+                        {
+                            currentUserMembership = result.ToString();
+                        }
+                    }
+
+                    // Check if current user has PLATINUM membership - ONLY PLATINUM
+                    bool canViewContact = currentUserMembership.Equals("Platinum", StringComparison.OrdinalIgnoreCase);
+
+                    if (canViewContact)
+                    {
+                        // Get viewed user's contact number
+                        string contactQuery = "SELECT Phone FROM Users WHERE UserID = @ViewedUserID";
+                        using (SqlCommand contactCmd = new SqlCommand(contactQuery, conn))
+                        {
+                            contactCmd.Parameters.AddWithValue("@ViewedUserID", viewedUserID);
+                            object contactResult = contactCmd.ExecuteScalar();
+
+                            if (contactResult != null && contactResult != DBNull.Value && !string.IsNullOrEmpty(contactResult.ToString()))
+                            {
+                                string contactNumber = contactResult.ToString();
+
+                                // Show platinum badge and contact number panel
+                                pnlPlatinumBadge.Visible = true;
+                                pnlContactNumber.Visible = true;
+                                lblContactNumber.Text = contactNumber;
+
+                                // Show in basic info panel as well
+                                pnlPhoneBasicInfo.Visible = true;
+                                lblPhone.Text = contactNumber;
+
+                                // Hide other panels
+                                pnlContactRestricted.Visible = false;
+                                pnlPlatinumInfo.Visible = false;
+                            }
+                            else
+                            {
+                                pnlContactNumber.Visible = false;
+                                pnlContactRestricted.Visible = true;
+                                pnlContactRestricted.Controls.Clear();
+                                pnlContactRestricted.Controls.Add(new LiteralControl("<i class='fas fa-info-circle'></i> Contact number not available"));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Not a PLATINUM member
+                        pnlPlatinumBadge.Visible = false;
+                        pnlContactNumber.Visible = false;
+                        pnlPlatinumInfo.Visible = true;
+                        pnlContactRestricted.Visible = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("CheckPlatinumMembershipAndShowContact error: " + ex.Message);
+                // Don't show contact number panels if there's an error
+                pnlPlatinumBadge.Visible = false;
+                pnlContactNumber.Visible = false;
+                pnlPlatinumInfo.Visible = true;
             }
         }
 
@@ -657,9 +750,17 @@ namespace JivanBandhan4
 
 
 
+
+
+
+
+
+
 //using System;
+//using System.Collections.Generic;
 //using System.Data;
 //using System.Data.SqlClient;
+//using System.Text;
 //using System.Web.Services;
 //using System.Web.UI;
 //using System.Web.UI.HtmlControls;
@@ -671,6 +772,10 @@ namespace JivanBandhan4
 //    {
 //        string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=jivanbandhan;Integrated Security=True";
 
+//        // Add these protected declarations to match the aspx page
+//        protected global::System.Web.UI.WebControls.HiddenField hdnViewedUserGender;
+//        protected global::System.Web.UI.WebControls.HiddenField hdnCurrentUserGender;
+
 //        protected void Page_Load(object sender, EventArgs e)
 //        {
 //            if (!IsPostBack)
@@ -679,7 +784,6 @@ namespace JivanBandhan4
 //                {
 //                    hdnCurrentUserID.Value = Session["UserID"].ToString();
 
-//                    // Get UserID from query string
 //                    if (Request.QueryString["UserID"] != null)
 //                    {
 //                        int viewedUserID = Convert.ToInt32(Request.QueryString["UserID"]);
@@ -687,9 +791,8 @@ namespace JivanBandhan4
 //                        LoadUserProfile(viewedUserID);
 //                        LoadUserPhotos(viewedUserID);
 //                        UpdateProfileViewCount(viewedUserID);
-
-//                        // Check if current user has already sent interest/shortlisted
 //                        CheckUserActions(Convert.ToInt32(Session["UserID"]), viewedUserID);
+//                        CheckPlatinumMembershipAndShowContact(Convert.ToInt32(Session["UserID"]), viewedUserID);
 //                    }
 //                    else
 //                    {
@@ -722,13 +825,8 @@ namespace JivanBandhan4
 //                                    u.MotherOccupation, u.NoOfBrothers, u.NoOfSisters,
 //                                    u.NativePlace, u.FamilyDetails, u.AboutMe, u.Hobbies,
 //                                    u.PartnerExpectations, u.ProfilePhoto, u.CreatedDate,
-//                                    DATEDIFF(YEAR, u.DateOfBirth, GETDATE()) as Age,
-//                                    CASE WHEN um.MembershipType IS NOT NULL AND um.ExpiryDate > GETDATE() 
-//                                         THEN 1 ELSE 0 END as IsPremium,
-//                                    (SELECT COUNT(*) FROM ProfileViews WHERE UserID = u.UserID) as ProfileViews,
-//                                    (SELECT COUNT(*) FROM Interests WHERE TargetUserID = u.UserID) as InterestsReceived
+//                                    DATEDIFF(YEAR, u.DateOfBirth, GETDATE()) as Age
 //                                FROM Users u
-//                                LEFT JOIN UserMemberships um ON u.UserID = um.UserID AND um.ExpiryDate > GETDATE()
 //                                WHERE u.UserID = @UserID";
 
 //                    using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -742,6 +840,12 @@ namespace JivanBandhan4
 //                            // Set basic information
 //                            lblFullName.Text = reader["FullName"].ToString();
 //                            lblPersonalFullName.Text = reader["FullName"].ToString();
+
+//                            // Store viewed user's gender in hidden field
+//                            if (hdnViewedUserGender != null)
+//                            {
+//                                hdnViewedUserGender.Value = reader["Gender"] != DBNull.Value ? reader["Gender"].ToString() : "";
+//                            }
 
 //                            // Age
 //                            if (reader["Age"] != DBNull.Value)
@@ -773,6 +877,9 @@ namespace JivanBandhan4
 //                            lblEducation.Text = reader["Education"] != DBNull.Value ? reader["Education"].ToString() : "Not specified";
 //                            lblHighestEducation.Text = lblEducation.Text;
 
+//                            // Phone Number - Directly from database
+//                            lblPhone.Text = reader["Phone"] != DBNull.Value ? reader["Phone"].ToString() : "Not specified";
+
 //                            // Profile ID
 //                            lblProfileID.Text = "MB" + userID.ToString("D4");
 
@@ -790,11 +897,10 @@ namespace JivanBandhan4
 //                            }
 
 //                            lblMaritalStatus.Text = reader["MaritalStatus"] != DBNull.Value ? reader["MaritalStatus"].ToString() : "Not specified";
-//                            lblPhysicalStatus.Text = reader["PhysicalStatus"] != DBNull.Value ? reader["PhysicalStatus"].ToString() : "Not specified";
+//                            lblPersonalMaritalStatus.Text = lblMaritalStatus.Text;
 
 //                            // Religious details
 //                            lblSubCaste.Text = reader["SubCaste"] != DBNull.Value ? reader["SubCaste"].ToString() : "Not specified";
-//                            lblGothra.Text = reader["Gothra"] != DBNull.Value ? reader["Gothra"].ToString() : "Not specified";
 //                            lblManglik.Text = reader["Manglik"] != DBNull.Value ? reader["Manglik"].ToString() : "Not specified";
 
 //                            // Education details
@@ -803,48 +909,18 @@ namespace JivanBandhan4
 
 //                            // Career details
 //                            lblOccupationField.Text = reader["OccupationField"] != DBNull.Value ? reader["OccupationField"].ToString() : "Not specified";
-//                            lblCompany.Text = reader["Company"] != DBNull.Value ? reader["Company"].ToString() : "Not specified";
 //                            lblAnnualIncome.Text = reader["AnnualIncome"] != DBNull.Value ? reader["AnnualIncome"].ToString() : "Not specified";
 
 //                            // Family information
 //                            lblFamilyType.Text = reader["FamilyType"] != DBNull.Value ? reader["FamilyType"].ToString() : "Not specified";
-//                            lblFamilyStatus.Text = reader["FamilyStatus"] != DBNull.Value ? reader["FamilyStatus"].ToString() : "Not specified";
 //                            lblFatherOccupation.Text = reader["FatherOccupation"] != DBNull.Value ? reader["FatherOccupation"].ToString() : "Not specified";
 //                            lblMotherOccupation.Text = reader["MotherOccupation"] != DBNull.Value ? reader["MotherOccupation"].ToString() : "Not specified";
-//                            lblBrothers.Text = reader["NoOfBrothers"] != DBNull.Value ? reader["NoOfBrothers"].ToString() : "0";
-//                            lblSisters.Text = reader["NoOfSisters"] != DBNull.Value ? reader["NoOfSisters"].ToString() : "0";
-//                            lblNativePlace.Text = reader["NativePlace"] != DBNull.Value ? reader["NativePlace"].ToString() : "Not specified";
-
-//                            // Lifestyle
-//                            lblEatingHabits.Text = reader["EatingHabits"] != DBNull.Value ? reader["EatingHabits"].ToString() : "Not specified";
-//                            lblDrinkingHabits.Text = reader["DrinkingHabits"] != DBNull.Value ? reader["DrinkingHabits"].ToString() : "Not specified";
-//                            lblSmokingHabits.Text = reader["SmokingHabits"] != DBNull.Value ? reader["SmokingHabits"].ToString() : "Not specified";
-//                            lblHobbies.Text = reader["Hobbies"] != DBNull.Value ? reader["Hobbies"].ToString() : "Not specified";
-//                            lblAboutMe.Text = reader["AboutMe"] != DBNull.Value ? reader["AboutMe"].ToString() : "Not specified";
-
-//                            // Stats
-//                            lblProfileViews.Text = reader["ProfileViews"].ToString();
-//                            lblInterestsReceived.Text = reader["InterestsReceived"].ToString();
-
-//                            // Premium badge
-//                            bool isPremium = Convert.ToBoolean(reader["IsPremium"]);
-//                            pnlPremiumBadge.Visible = isPremium;
-
-//                            // Online status (random for demo)
-//                            Random rnd = new Random();
-//                            bool isOnline = rnd.Next(0, 100) > 50;
-//                            onlineStatus.Attributes["class"] = isOnline ?
-//                                "online-status marathi-font online" :
-//                                "online-status marathi-font offline";
-
-//                            HtmlGenericControl statusTextControl = (HtmlGenericControl)onlineStatus.FindControl("statusText");
-//                            if (statusTextControl != null)
-//                            {
-//                                statusTextControl.InnerText = isOnline ? "Online Now" : "Offline";
-//                            }
 
 //                            // Load profile photo
 //                            LoadProfilePhoto(userID, imgProfileLarge);
+
+//                            // Set flip photo data
+//                            SetFlipPhotoData();
 //                        }
 //                        else
 //                        {
@@ -860,17 +936,199 @@ namespace JivanBandhan4
 //            }
 //        }
 
+//        private void CheckPlatinumMembershipAndShowContact(int currentUserID, int viewedUserID)
+//        {
+//            try
+//            {
+//                using (SqlConnection conn = new SqlConnection(connectionString))
+//                {
+//                    conn.Open();
+
+//                    // Get current user's membership
+//                    string membershipQuery = @"SELECT ISNULL(MembershipType, 'Free') as MembershipType 
+//                                             FROM UserMemberships 
+//                                             WHERE UserID = @CurrentUserID AND ExpiryDate > GETDATE()";
+
+//                    string currentUserMembership = "Free";
+//                    using (SqlCommand membershipCmd = new SqlCommand(membershipQuery, conn))
+//                    {
+//                        membershipCmd.Parameters.AddWithValue("@CurrentUserID", currentUserID);
+//                        object result = membershipCmd.ExecuteScalar();
+//                        if (result != null)
+//                        {
+//                            currentUserMembership = result.ToString();
+//                        }
+//                    }
+
+//                    // Check if current user has PLATINUM membership - ONLY PLATINUM
+//                    bool canViewContact = currentUserMembership == "Platinum";
+
+//                    if (canViewContact)
+//                    {
+//                        // Get viewed user's contact number
+//                        string contactQuery = "SELECT Phone FROM Users WHERE UserID = @ViewedUserID";
+//                        using (SqlCommand contactCmd = new SqlCommand(contactQuery, conn))
+//                        {
+//                            contactCmd.Parameters.AddWithValue("@ViewedUserID", viewedUserID);
+//                            object contactResult = contactCmd.ExecuteScalar();
+
+//                            if (contactResult != null && contactResult != DBNull.Value && !string.IsNullOrEmpty(contactResult.ToString()))
+//                            {
+//                                string contactNumber = contactResult.ToString();
+
+//                                // Show platinum badge and contact number panel
+//                                pnlPlatinumBadge.Visible = true;
+//                                pnlContactNumber.Visible = true;
+//                                lblContactNumber.Text = contactNumber;
+
+//                                // Hide other panels
+//                                pnlContactRestricted.Visible = false;
+//                                pnlPlatinumInfo.Visible = false;
+//                            }
+//                            else
+//                            {
+//                                pnlContactNumber.Visible = false;
+//                                pnlContactRestricted.Visible = true;
+//                                pnlContactRestricted.Controls.Clear();
+//                                pnlContactRestricted.Controls.Add(new LiteralControl("<i class='fas fa-info-circle'></i> Contact number not available"));
+//                            }
+//                        }
+//                    }
+//                    else
+//                    {
+//                        // Not a PLATINUM member
+//                        pnlPlatinumBadge.Visible = false;
+//                        pnlContactNumber.Visible = false;
+//                        pnlPlatinumInfo.Visible = true;
+//                        pnlContactRestricted.Visible = false;
+//                    }
+//                }
+//            }
+//            catch (Exception ex)
+//            {
+//                System.Diagnostics.Debug.WriteLine("CheckPlatinumMembershipAndShowContact error: " + ex.Message);
+//                // Don't show contact number panels if there's an error
+//                pnlPlatinumBadge.Visible = false;
+//                pnlContactNumber.Visible = false;
+//                pnlPlatinumInfo.Visible = true;
+//            }
+//        }
+
+//        private void LoadUserPhotos(int userID)
+//        {
+//            try
+//            {
+//                using (SqlConnection conn = new SqlConnection(connectionString))
+//                {
+//                    string query = @"SELECT PhotoID, PhotoPath, PhotoType, UploadDate, IsProfilePhoto 
+//                                   FROM UserPhotos 
+//                                   WHERE UserID = @UserID AND IsActive = 1
+//                                   ORDER BY 
+//                                       CASE WHEN IsProfilePhoto = 1 THEN 0 ELSE 1 END,
+//                                       UploadDate DESC";
+
+//                    using (SqlCommand cmd = new SqlCommand(query, conn))
+//                    {
+//                        cmd.Parameters.AddWithValue("@UserID", userID);
+//                        conn.Open();
+//                        SqlDataReader reader = cmd.ExecuteReader();
+
+//                        List<PhotoData> photos = new List<PhotoData>();
+//                        int photoCount = 0;
+
+//                        while (reader.Read())
+//                        {
+//                            string photoPath = reader["PhotoPath"].ToString();
+//                            string photoType = reader["PhotoType"].ToString();
+//                            bool isProfilePhoto = Convert.ToBoolean(reader["IsProfilePhoto"]);
+
+//                            if (!string.IsNullOrEmpty(photoPath))
+//                            {
+//                                string photoUrl = GetPhotoUrl(userID, photoPath);
+//                                string photoTitle = isProfilePhoto ? "Profile Photo" : $"{photoType} Photo";
+
+//                                photos.Add(new PhotoData
+//                                {
+//                                    Url = photoUrl,
+//                                    Title = photoTitle,
+//                                    IsProfilePhoto = isProfilePhoto
+//                                });
+
+//                                photoCount++;
+//                            }
+//                        }
+
+//                        if (photos.Count > 0)
+//                        {
+//                            // Store photos in hidden field for JavaScript
+//                            hdnUserPhotos.Value = Newtonsoft.Json.JsonConvert.SerializeObject(photos);
+
+//                            // Generate HTML for photo gallery
+//                            StringBuilder galleryHtml = new StringBuilder();
+//                            for (int i = 0; i < photos.Count; i++)
+//                            {
+//                                galleryHtml.Append($@"
+//                                    <div class='gallery-item' onclick='openModal({i})'>
+//                                        <img src='{photos[i].Url}' alt='{photos[i].Title}' class='gallery-photo' 
+//                                             onerror='this.src=""Images/default-profile.jpg""' />
+//                                        <div class='photo-overlay'>
+//                                            <div class='marathi-font'>{photos[i].Title}</div>
+//                                        </div>
+//                                    </div>");
+//                            }
+
+//                            photoGallery.InnerHtml = galleryHtml.ToString();
+//                            pnlNoPhotos.Visible = false;
+//                        }
+//                        else
+//                        {
+//                            pnlNoPhotos.Visible = true;
+//                            hdnUserPhotos.Value = "[]"; // Empty array for JavaScript
+//                        }
+//                    }
+//                }
+//            }
+//            catch (Exception ex)
+//            {
+//                System.Diagnostics.Debug.WriteLine("LoadUserPhotos error: " + ex.Message);
+//                pnlNoPhotos.Visible = true;
+//                hdnUserPhotos.Value = "[]"; // Empty array for JavaScript
+//            }
+//        }
+
+//        private string GetPhotoUrl(int userID, string photoPath)
+//        {
+//            try
+//            {
+//                // Check if photo exists in physical path
+//                string physicalPath = Server.MapPath($"~/Uploads/{userID}/{photoPath}");
+//                if (System.IO.File.Exists(physicalPath))
+//                {
+//                    return ResolveUrl($"~/Uploads/{userID}/{photoPath}");
+//                }
+//                else
+//                {
+//                    // If photo doesn't exist, return default image
+//                    return ResolveUrl("~/Images/default-profile.jpg");
+//                }
+//            }
+//            catch (Exception ex)
+//            {
+//                System.Diagnostics.Debug.WriteLine("GetPhotoUrl error: " + ex.Message);
+//                return ResolveUrl("~/Images/default-profile.jpg");
+//            }
+//        }
+
 //        private void LoadProfilePhoto(int userID, System.Web.UI.WebControls.Image imgControl)
 //        {
 //            try
 //            {
 //                using (SqlConnection conn = new SqlConnection(connectionString))
 //                {
+//                    // First try to get profile photo
 //                    string query = @"SELECT TOP 1 PhotoPath FROM UserPhotos 
-//                                   WHERE UserID = @UserID 
-//                                   ORDER BY 
-//                                       CASE WHEN PhotoType = 'Profile' THEN 1 ELSE 2 END,
-//                                       UploadDate DESC";
+//                                   WHERE UserID = @UserID AND IsProfilePhoto = 1 AND IsActive = 1
+//                                   ORDER BY UploadDate DESC";
 
 //                    using (SqlCommand cmd = new SqlCommand(query, conn))
 //                    {
@@ -881,11 +1139,32 @@ namespace JivanBandhan4
 //                        if (result != null && result != DBNull.Value && !string.IsNullOrEmpty(result.ToString()))
 //                        {
 //                            string photoPath = result.ToString();
-//                            SetProfilePhoto(imgControl, photoPath);
+//                            string photoUrl = GetPhotoUrl(userID, photoPath);
+//                            imgControl.ImageUrl = photoUrl;
 //                        }
 //                        else
 //                        {
-//                            imgControl.ImageUrl = ResolveUrl("~/Images/default-profile.jpg");
+//                            // If no profile photo, get any active photo
+//                            query = @"SELECT TOP 1 PhotoPath FROM UserPhotos 
+//                                     WHERE UserID = @UserID AND IsActive = 1
+//                                     ORDER BY UploadDate DESC";
+
+//                            using (SqlCommand cmd2 = new SqlCommand(query, conn))
+//                            {
+//                                cmd2.Parameters.AddWithValue("@UserID", userID);
+//                                result = cmd2.ExecuteScalar();
+
+//                                if (result != null && result != DBNull.Value && !string.IsNullOrEmpty(result.ToString()))
+//                                {
+//                                    string photoPath = result.ToString();
+//                                    string photoUrl = GetPhotoUrl(userID, photoPath);
+//                                    imgControl.ImageUrl = photoUrl;
+//                                }
+//                                else
+//                                {
+//                                    imgControl.ImageUrl = ResolveUrl("~/Images/default-profile.jpg");
+//                                }
+//                            }
 //                        }
 //                    }
 //                }
@@ -897,104 +1176,13 @@ namespace JivanBandhan4
 //            }
 //        }
 
-//        private void SetProfilePhoto(System.Web.UI.WebControls.Image imgControl, string photoPath)
+//        // Set data for flip photo back side
+//        private void SetFlipPhotoData()
 //        {
-//            try
-//            {
-//                if (!string.IsNullOrEmpty(photoPath))
-//                {
-//                    string resolvedPath = ResolveUrl("~/Uploads/" + hdnViewedUserID.Value + "/" + photoPath);
-//                    imgControl.ImageUrl = resolvedPath;
-//                    imgControl.Attributes["onerror"] = "this.src='" + ResolveUrl("~/Images/default-profile.jpg") + "'";
-//                }
-//                else
-//                {
-//                    imgControl.ImageUrl = ResolveUrl("~/Images/default-profile.jpg");
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                System.Diagnostics.Debug.WriteLine("SetProfilePhoto error: " + ex.Message);
-//                imgControl.ImageUrl = ResolveUrl("~/Images/default-profile.jpg");
-//            }
-//        }
-
-//        private void LoadUserPhotos(int userID)
-//        {
-//            try
-//            {
-//                using (SqlConnection conn = new SqlConnection(connectionString))
-//                {
-//                    string query = @"SELECT PhotoPath, PhotoType FROM UserPhotos 
-//                                   WHERE UserID = @UserID AND IsActive = 1
-//                                   ORDER BY 
-//                                       CASE WHEN PhotoType = 'Profile' THEN 1 ELSE 2 END,
-//                                       UploadDate DESC";
-
-//                    using (SqlCommand cmd = new SqlCommand(query, conn))
-//                    {
-//                        cmd.Parameters.AddWithValue("@UserID", userID);
-//                        conn.Open();
-//                        SqlDataReader reader = cmd.ExecuteReader();
-
-//                        if (reader.HasRows)
-//                        {
-//                            DataTable dt = new DataTable();
-//                            dt.Load(reader);
-//                            rptPhotoGallery.DataSource = dt;
-//                            rptPhotoGallery.DataBind();
-//                            pnlNoPhotos.Visible = false;
-//                        }
-//                        else
-//                        {
-//                            rptPhotoGallery.DataSource = null;
-//                            rptPhotoGallery.DataBind();
-//                            pnlNoPhotos.Visible = true;
-//                        }
-//                    }
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                System.Diagnostics.Debug.WriteLine("LoadUserPhotos error: " + ex.Message);
-//                pnlNoPhotos.Visible = true;
-//            }
-//        }
-
-//        protected void rptPhotoGallery_ItemDataBound(object sender, RepeaterItemEventArgs e)
-//        {
-//            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-//            {
-//                Label lblPhotoType = (Label)e.Item.FindControl("lblPhotoType");
-//                if (lblPhotoType != null)
-//                {
-//                    string photoType = lblPhotoType.Text;
-//                    // Translate photo types to Marathi if needed
-//                    if (photoType == "Profile")
-//                        lblPhotoType.Text = "प्रोफाइल";
-//                    else if (photoType == "Family")
-//                        lblPhotoType.Text = "कुटुंब";
-//                    else if (photoType == "Hobby")
-//                        lblPhotoType.Text = "छंद";
-//                    else if (photoType == "Education")
-//                        lblPhotoType.Text = "शिक्षण";
-//                    else if (photoType == "Career")
-//                        lblPhotoType.Text = "करिअर";
-//                }
-
-//                // Set the image path correctly
-//                System.Web.UI.WebControls.Image img = (System.Web.UI.WebControls.Image)e.Item.FindControl("galleryPhoto");
-//                if (img != null)
-//                {
-//                    string photoPath = DataBinder.Eval(e.Item.DataItem, "PhotoPath").ToString();
-//                    if (!string.IsNullOrEmpty(photoPath))
-//                    {
-//                        string resolvedPath = ResolveUrl("~/Uploads/" + hdnViewedUserID.Value + "/" + photoPath);
-//                        img.ImageUrl = resolvedPath;
-//                        img.Attributes["onerror"] = "this.src='" + ResolveUrl("~/Images/default-profile.jpg") + "'";
-//                    }
-//                }
-//            }
+//            lblFlipName.Text = lblFullName.Text;
+//            lblFlipAge.Text = lblAge.Text;
+//            lblFlipLocation.Text = lblLocation.Text;
+//            lblFlipOccupation.Text = lblOccupation.Text;
 //        }
 
 //        private void UpdateProfileViewCount(int viewedUserID)
@@ -1080,12 +1268,6 @@ namespace JivanBandhan4
 //            {
 //                string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=jivanbandhan;Integrated Security=True";
 
-//                // Check if user can send interest based on membership
-//                if (!CanUserSendInterest(sentByUserID))
-//                {
-//                    return "limit_exceeded";
-//                }
-
 //                using (SqlConnection conn = new SqlConnection(connectionString))
 //                {
 //                    // Check if interest already exists
@@ -1116,12 +1298,6 @@ namespace JivanBandhan4
 
 //                        if (rowsAffected > 0)
 //                        {
-//                            // Update daily interest count for free users
-//                            UpdateDailyInterestCount(sentByUserID);
-
-//                            // Create notification for the receiver
-//                            CreateNotification(targetUserID, sentByUserID, "interest",
-//                                "You have received a new interest from a user");
 //                            return "success";
 //                        }
 //                        else
@@ -1145,12 +1321,6 @@ namespace JivanBandhan4
 //            {
 //                string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=jivanbandhan;Integrated Security=True";
 
-//                // Check if user can send message based on membership
-//                if (!CanUserSendMessage(fromUserID))
-//                {
-//                    return "limit_exceeded";
-//                }
-
 //                using (SqlConnection conn = new SqlConnection(connectionString))
 //                {
 //                    string query = @"INSERT INTO Messages (FromUserID, ToUserID, MessageText, SentDate, IsRead, IsActive)
@@ -1167,12 +1337,6 @@ namespace JivanBandhan4
 
 //                        if (rowsAffected > 0)
 //                        {
-//                            // Update daily message count for free users
-//                            UpdateDailyMessageCount(fromUserID);
-
-//                            // Create notification for the receiver
-//                            CreateNotification(toUserID, fromUserID, "message",
-//                                "You have received a new message");
 //                            return "success";
 //                        }
 //                        else
@@ -1226,9 +1390,6 @@ namespace JivanBandhan4
 
 //                        if (rowsAffected > 0)
 //                        {
-//                            // Create notification for the shortlisted user
-//                            CreateNotification(shortlistedUserID, userID, "shortlist",
-//                                "Your profile has been shortlisted by a user");
 //                            return "success";
 //                        }
 //                        else
@@ -1245,259 +1406,8 @@ namespace JivanBandhan4
 //            }
 //        }
 
-//        // Helper method to check if user can send interest
-//        private static bool CanUserSendInterest(int userID)
-//        {
-//            try
-//            {
-//                string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=jivanbandhan;Integrated Security=True";
-
-//                using (SqlConnection conn = new SqlConnection(connectionString))
-//                {
-//                    // Check membership type first
-//                    string membershipQuery = @"SELECT ISNULL(um.MembershipType, 'Free') as MembershipType
-//                                            FROM Users u
-//                                            LEFT JOIN UserMemberships um ON u.UserID = um.UserID 
-//                                                AND um.ExpiryDate > GETDATE()
-//                                            WHERE u.UserID = @UserID";
-
-//                    using (SqlCommand cmd = new SqlCommand(membershipQuery, conn))
-//                    {
-//                        cmd.Parameters.AddWithValue("@UserID", userID);
-//                        conn.Open();
-//                        string membershipType = cmd.ExecuteScalar()?.ToString() ?? "Free";
-
-//                        // Premium users have unlimited access
-//                        if (membershipType != "Free")
-//                        {
-//                            return true;
-//                        }
-
-//                        // For free users, check daily limit
-//                        string limitQuery = @"SELECT COUNT(*) FROM Interests 
-//                                            WHERE SentByUserID = @UserID 
-//                                            AND CAST(SentDate AS DATE) = CAST(GETDATE() AS DATE)";
-//                        using (SqlCommand limitCmd = new SqlCommand(limitQuery, conn))
-//                        {
-//                            limitCmd.Parameters.AddWithValue("@UserID", userID);
-//                            int todayCount = (int)limitCmd.ExecuteScalar();
-
-//                            // Free users can send maximum 5 interests per day
-//                            return todayCount < 5;
-//                        }
-//                    }
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                System.Diagnostics.Debug.WriteLine("CanUserSendInterest error: " + ex.Message);
-//                return true; // Assume can send on error
-//            }
-//        }
-
-//        // Helper method to check if user can send message
-//        private static bool CanUserSendMessage(int userID)
-//        {
-//            try
-//            {
-//                string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=jivanbandhan;Integrated Security=True";
-
-//                using (SqlConnection conn = new SqlConnection(connectionString))
-//                {
-//                    // Check membership type first
-//                    string membershipQuery = @"SELECT ISNULL(um.MembershipType, 'Free') as MembershipType
-//                                            FROM Users u
-//                                            LEFT JOIN UserMemberships um ON u.UserID = um.UserID 
-//                                                AND um.ExpiryDate > GETDATE()
-//                                            WHERE u.UserID = @UserID";
-
-//                    using (SqlCommand cmd = new SqlCommand(membershipQuery, conn))
-//                    {
-//                        cmd.Parameters.AddWithValue("@UserID", userID);
-//                        conn.Open();
-//                        string membershipType = cmd.ExecuteScalar()?.ToString() ?? "Free";
-
-//                        // Premium users have unlimited access
-//                        if (membershipType != "Free")
-//                        {
-//                            return true;
-//                        }
-
-//                        // For free users, check daily limit
-//                        string limitQuery = @"SELECT COUNT(*) FROM Messages 
-//                                            WHERE FromUserID = @UserID 
-//                                            AND CAST(SentDate AS DATE) = CAST(GETDATE() AS DATE)
-//                                            AND IsActive = 1";
-//                        using (SqlCommand limitCmd = new SqlCommand(limitQuery, conn))
-//                        {
-//                            limitCmd.Parameters.AddWithValue("@UserID", userID);
-//                            int todayCount = (int)limitCmd.ExecuteScalar();
-
-//                            // Free users can send maximum 3 messages per day
-//                            return todayCount < 3;
-//                        }
-//                    }
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                System.Diagnostics.Debug.WriteLine("CanUserSendMessage error: " + ex.Message);
-//                return true; // Assume can send on error
-//            }
-//        }
-
-//        // Update daily interest count for free users
-//        private static void UpdateDailyInterestCount(int userID)
-//        {
-//            try
-//            {
-//                string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=jivanbandhan;Integrated Security=True";
-
-//                using (SqlConnection conn = new SqlConnection(connectionString))
-//                {
-//                    // For free users, we track daily counts (premium users have unlimited)
-//                    string checkMembershipQuery = @"SELECT ISNULL(um.MembershipType, 'Free') as MembershipType
-//                                                  FROM Users u
-//                                                  LEFT JOIN UserMemberships um ON u.UserID = um.UserID 
-//                                                      AND um.ExpiryDate > GETDATE()
-//                                                  WHERE u.UserID = @UserID";
-
-//                    using (SqlCommand cmd = new SqlCommand(checkMembershipQuery, conn))
-//                    {
-//                        cmd.Parameters.AddWithValue("@UserID", userID);
-//                        conn.Open();
-//                        string membershipType = cmd.ExecuteScalar()?.ToString() ?? "Free";
-
-//                        if (membershipType == "Free")
-//                        {
-//                            // Update or insert daily count for free user
-//                            string updateQuery = @"IF EXISTS (SELECT 1 FROM UserDailyCounts 
-//                                                    WHERE UserID = @UserID AND CountDate = CAST(GETDATE() AS DATE))
-//                                                BEGIN
-//                                                    UPDATE UserDailyCounts 
-//                                                    SET InterestsSent = InterestsSent + 1
-//                                                    WHERE UserID = @UserID AND CountDate = CAST(GETDATE() AS DATE)
-//                                                END
-//                                                ELSE
-//                                                BEGIN
-//                                                    INSERT INTO UserDailyCounts (UserID, CountDate, InterestsSent, MessagesSent)
-//                                                    VALUES (@UserID, CAST(GETDATE() AS DATE), 1, 0)
-//                                                END";
-
-//                            using (SqlCommand updateCmd = new SqlCommand(updateQuery, conn))
-//                            {
-//                                updateCmd.Parameters.AddWithValue("@UserID", userID);
-//                                updateCmd.ExecuteNonQuery();
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                System.Diagnostics.Debug.WriteLine("UpdateDailyInterestCount error: " + ex.Message);
-//            }
-//        }
-
-//        // Update daily message count for free users
-//        private static void UpdateDailyMessageCount(int userID)
-//        {
-//            try
-//            {
-//                string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=jivanbandhan;Integrated Security=True";
-
-//                using (SqlConnection conn = new SqlConnection(connectionString))
-//                {
-//                    // For free users, we track daily counts (premium users have unlimited)
-//                    string checkMembershipQuery = @"SELECT ISNULL(um.MembershipType, 'Free') as MembershipType
-//                                                  FROM Users u
-//                                                  LEFT JOIN UserMemberships um ON u.UserID = um.UserID 
-//                                                      AND um.ExpiryDate > GETDATE()
-//                                                  WHERE u.UserID = @UserID";
-
-//                    using (SqlCommand cmd = new SqlCommand(checkMembershipQuery, conn))
-//                    {
-//                        cmd.Parameters.AddWithValue("@UserID", userID);
-//                        conn.Open();
-//                        string membershipType = cmd.ExecuteScalar()?.ToString() ?? "Free";
-
-//                        if (membershipType == "Free")
-//                        {
-//                            // Update or insert daily count for free user
-//                            string updateQuery = @"IF EXISTS (SELECT 1 FROM UserDailyCounts 
-//                                                    WHERE UserID = @UserID AND CountDate = CAST(GETDATE() AS DATE))
-//                                                BEGIN
-//                                                    UPDATE UserDailyCounts 
-//                                                    SET MessagesSent = MessagesSent + 1
-//                                                    WHERE UserID = @UserID AND CountDate = CAST(GETDATE() AS DATE)
-//                                                END
-//                                                ELSE
-//                                                BEGIN
-//                                                    INSERT INTO UserDailyCounts (UserID, CountDate, InterestsSent, MessagesSent)
-//                                                    VALUES (@UserID, CAST(GETDATE() AS DATE), 0, 1)
-//                                                END";
-
-//                            using (SqlCommand updateCmd = new SqlCommand(updateQuery, conn))
-//                            {
-//                                updateCmd.Parameters.AddWithValue("@UserID", userID);
-//                                updateCmd.ExecuteNonQuery();
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                System.Diagnostics.Debug.WriteLine("UpdateDailyMessageCount error: " + ex.Message);
-//            }
-//        }
-
-//        // Helper method for creating notifications
-//        private static void CreateNotification(int userID, int fromUserID, string notificationType, string message)
-//        {
-//            try
-//            {
-//                string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=jivanbandhan;Integrated Security=True";
-
-//                using (SqlConnection conn = new SqlConnection(connectionString))
-//                {
-//                    // Get from user's name for the notification
-//                    string fromUserNameQuery = "SELECT FullName FROM Users WHERE UserID = @FromUserID";
-//                    string fromUserName = "";
-
-//                    using (SqlCommand nameCmd = new SqlCommand(fromUserNameQuery, conn))
-//                    {
-//                        nameCmd.Parameters.AddWithValue("@FromUserID", fromUserID);
-//                        conn.Open();
-//                        object result = nameCmd.ExecuteScalar();
-//                        fromUserName = result?.ToString() ?? "A user";
-//                    }
-
-//                    // Create personalized notification message
-//                    string personalizedMessage = $"{fromUserName} {message.ToLower()}";
-
-//                    string query = @"INSERT INTO Notifications (UserID, FromUserID, NotificationType, Message, IsRead, CreatedDate)
-//                                   VALUES (@UserID, @FromUserID, @NotificationType, @Message, 0, GETDATE())";
-
-//                    using (SqlCommand cmd = new SqlCommand(query, conn))
-//                    {
-//                        cmd.Parameters.AddWithValue("@UserID", userID);
-//                        cmd.Parameters.AddWithValue("@FromUserID", fromUserID);
-//                        cmd.Parameters.AddWithValue("@NotificationType", notificationType);
-//                        cmd.Parameters.AddWithValue("@Message", personalizedMessage);
-//                        cmd.ExecuteNonQuery();
-//                    }
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                System.Diagnostics.Debug.WriteLine("CreateNotification error: " + ex.Message);
-//            }
-//        }
-
-//        // Get remaining counts for free users
 //        [WebMethod]
-//        public static string GetRemainingCounts(int userID)
+//        public static string BlockUser(int blockedByUserID, int blockedUserID)
 //        {
 //            try
 //            {
@@ -1505,61 +1415,95 @@ namespace JivanBandhan4
 
 //                using (SqlConnection conn = new SqlConnection(connectionString))
 //                {
-//                    // Check membership type
-//                    string membershipQuery = @"SELECT ISNULL(um.MembershipType, 'Free') as MembershipType
-//                                            FROM Users u
-//                                            LEFT JOIN UserMemberships um ON u.UserID = um.UserID 
-//                                                AND um.ExpiryDate > GETDATE()
-//                                            WHERE u.UserID = @UserID";
-
-//                    using (SqlCommand cmd = new SqlCommand(membershipQuery, conn))
+//                    // Check if already blocked
+//                    string checkQuery = @"SELECT COUNT(*) FROM BlockedUsers 
+//                                WHERE BlockedByUserID = @BlockedByUserID 
+//                                AND BlockedUserID = @BlockedUserID";
+//                    using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
 //                    {
-//                        cmd.Parameters.AddWithValue("@UserID", userID);
+//                        checkCmd.Parameters.AddWithValue("@BlockedByUserID", blockedByUserID);
+//                        checkCmd.Parameters.AddWithValue("@BlockedUserID", blockedUserID);
 //                        conn.Open();
-//                        string membershipType = cmd.ExecuteScalar()?.ToString() ?? "Free";
+//                        int existingCount = (int)checkCmd.ExecuteScalar();
 
-//                        if (membershipType != "Free")
+//                        if (existingCount > 0)
 //                        {
-//                            // Premium users have unlimited access
-//                            return "∞,∞";
+//                            return "exists";
 //                        }
+//                    }
 
-//                        // For free users, calculate remaining counts
-//                        string countsQuery = @"SELECT 
-//                                            ISNULL(SUM(CASE WHEN CountDate = CAST(GETDATE() AS DATE) THEN InterestsSent ELSE 0 END), 0) as TodayInterests,
-//                                            ISNULL(SUM(CASE WHEN CountDate = CAST(GETDATE() AS DATE) THEN MessagesSent ELSE 0 END), 0) as TodayMessages
-//                                        FROM UserDailyCounts 
-//                                        WHERE UserID = @UserID";
+//                    // Insert new block
+//                    string insertQuery = @"INSERT INTO BlockedUsers (BlockedByUserID, BlockedUserID, BlockedDate) 
+//                                 VALUES (@BlockedByUserID, @BlockedUserID, GETDATE())";
+//                    using (SqlCommand insertCmd = new SqlCommand(insertQuery, conn))
+//                    {
+//                        insertCmd.Parameters.AddWithValue("@BlockedByUserID", blockedByUserID);
+//                        insertCmd.Parameters.AddWithValue("@BlockedUserID", blockedUserID);
+//                        int rowsAffected = insertCmd.ExecuteNonQuery();
 
-//                        using (SqlCommand countsCmd = new SqlCommand(countsQuery, conn))
+//                        if (rowsAffected > 0)
 //                        {
-//                            countsCmd.Parameters.AddWithValue("@UserID", userID);
-//                            using (SqlDataReader reader = countsCmd.ExecuteReader())
-//                            {
-//                                int todayInterests = 0;
-//                                int todayMessages = 0;
-
-//                                if (reader.Read())
-//                                {
-//                                    todayInterests = reader.GetInt32(0);
-//                                    todayMessages = reader.GetInt32(1);
-//                                }
-
-//                                int remainingInterests = Math.Max(0, 5 - todayInterests); // 5 daily limit for interests
-//                                int remainingMessages = Math.Max(0, 3 - todayMessages); // 3 daily limit for messages
-
-//                                return $"{remainingMessages},{remainingInterests}";
-//                            }
+//                            return "success";
+//                        }
+//                        else
+//                        {
+//                            return "error";
 //                        }
 //                    }
 //                }
 //            }
 //            catch (Exception ex)
 //            {
-//                System.Diagnostics.Debug.WriteLine("GetRemainingCounts error: " + ex.Message);
-//                return "0,0";
+//                System.Diagnostics.Debug.WriteLine("BlockUser error: " + ex.Message);
+//                return "error";
 //            }
+//        }
+
+//        [WebMethod]
+//        public static string ReportUser(int reportedByUserID, int reportedUserID, string reportReason)
+//        {
+//            try
+//            {
+//                string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=jivanbandhan;Integrated Security=True";
+
+//                using (SqlConnection conn = new SqlConnection(connectionString))
+//                {
+//                    string insertQuery = @"INSERT INTO ReportedUsers (ReportedByUserID, ReportedUserID, ReportReason, ReportedDate, Status) 
+//                                 VALUES (@ReportedByUserID, @ReportedUserID, @ReportReason, GETDATE(), 'Pending')";
+//                    using (SqlCommand insertCmd = new SqlCommand(insertQuery, conn))
+//                    {
+//                        insertCmd.Parameters.AddWithValue("@ReportedByUserID", reportedByUserID);
+//                        insertCmd.Parameters.AddWithValue("@ReportedUserID", reportedUserID);
+//                        insertCmd.Parameters.AddWithValue("@ReportReason", reportReason);
+//                        conn.Open();
+//                        int rowsAffected = insertCmd.ExecuteNonQuery();
+
+//                        if (rowsAffected > 0)
+//                        {
+//                            return "success";
+//                        }
+//                        else
+//                        {
+//                            return "error";
+//                        }
+//                    }
+//                }
+//            }
+//            catch (Exception ex)
+//            {
+//                System.Diagnostics.Debug.WriteLine("ReportUser error: " + ex.Message);
+//                return "error";
+//            }
+//        }
+
+//        // Photo data class for JSON serialization
+//        public class PhotoData
+//        {
+//            public string Url { get; set; }
+//            public string Title { get; set; }
+//            public bool IsProfilePhoto { get; set; }
 //        }
 //    }
 //}
+
 

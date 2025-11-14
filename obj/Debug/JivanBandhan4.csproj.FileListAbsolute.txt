@@ -1,3 +1,5 @@
+C:\Users\hp\source\repos\JivanBandhan4\obj\Debug\JivanBandhan4.csproj.AssemblyReference.cache
+C:\Users\hp\source\repos\JivanBandhan4\obj\Debug\JivanBandhan4.csproj.CoreCompileInputs.cache
 C:\Users\hp\source\repos\JivanBandhan4\bin\JivanBandhan4.dll.config
 C:\Users\hp\source\repos\JivanBandhan4\bin\JivanBandhan4.dll
 C:\Users\hp\source\repos\JivanBandhan4\bin\JivanBandhan4.pdb
@@ -54,8 +56,6 @@ C:\Users\hp\source\repos\JivanBandhan4\bin\Microsoft.CodeDom.Providers.DotNetCom
 C:\Users\hp\source\repos\JivanBandhan4\bin\Newtonsoft.Json.dll
 C:\Users\hp\source\repos\JivanBandhan4\bin\Newtonsoft.Json.xml
 C:\Users\hp\source\repos\JivanBandhan4\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Users\hp\source\repos\JivanBandhan4\obj\Debug\JivanBandhan4.csproj.AssemblyReference.cache
-C:\Users\hp\source\repos\JivanBandhan4\obj\Debug\JivanBandhan4.csproj.CoreCompileInputs.cache
 C:\Users\hp\source\repos\JivanBandhan4\obj\Debug\JivanBan.6E0B0CD1.Up2Date
 C:\Users\hp\source\repos\JivanBandhan4\obj\Debug\JivanBandhan4.dll
 C:\Users\hp\source\repos\JivanBandhan4\obj\Debug\JivanBandhan4.pdb
