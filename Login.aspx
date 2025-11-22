@@ -1,4 +1,5 @@
-﻿<%@ Page Title="Marathi Matrimony - Login" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="JivanBandhan4.Login" %>
+﻿
+<%@ Page Title="Marathi Matrimony - Login" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="JivanBandhan4.Login" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <style>
@@ -341,6 +342,19 @@
             padding: 12px 15px;
             font-size: 14px;
         }
+
+        .user-type-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #8B0000 0%, #B22222 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(139, 0, 0, 0.3);
+        }
     </style>
 
     <div class="login-container">
@@ -358,6 +372,8 @@
         <div class="celebration" id="celebrationContainer"></div>
         
         <div class="login-card">
+            <div class="user-type-badge" id="userTypeBadge">User Login</div>
+            
             <div class="login-logo">
                 <div class="logo-icon">
                     <i class="fas fa-heart"></i>
@@ -368,12 +384,12 @@
             
             <asp:Panel ID="pnlLogin" runat="server" DefaultButton="btnLogin">
                 <div class="form-group">
-                    <label class="form-label">ईमेल पत्ता</label>
+                    <label class="form-label">ईमेल पत्ता किंवा युजरनेम</label>
                     <div class="position-relative">
-                        <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" 
-                            placeholder="आपला ईमेल पत्ता टाका" TextMode="Email"></asp:TextBox>
+                        <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control" 
+                            placeholder="आपला ईमेल पत्ता किंवा युजरनेम टाका" onkeyup="checkUserType()"></asp:TextBox>
                         <div class="input-icon">
-                            <i class="fas fa-envelope"></i>
+                            <i class="fas fa-user"></i>
                         </div>
                     </div>
                 </div>
@@ -408,16 +424,16 @@
                 <!-- Guest Demo Accounts -->
                 <div class="guest-demo">
                     <p style="margin-bottom: 8px; color: #6c757d; font-size: 12px;">
-                        <i class="fas fa-info-circle"></i> चाचणीसाठी डेमो खाती:
+                        <i class="fas fa-info-circle"></i>
                     </p>
                     <div class="demo-accounts">
-                        <div class="demo-account" onclick="fillDemo('demo@jivanbandhan.com', 'demo123')">
-                            <div class="demo-email">demo@jivanbandhan.com</div>
-                            <div class="demo-password">पासवर्ड: demo123</div>
+                        <div class="demo-account" onclick="fillDemo('user@jivanbandhan.com', 'user123')">
+                            <div class="demo-email"></div>
+                            <div class="demo-password"> </div>
                         </div>
-                        <div class="demo-account" onclick="fillDemo('test@jivanbandhan.com', 'test123')">
-                            <div class="demo-email">test@jivanbandhan.com</div>
-                            <div class="demo-password">पासवर्ड: test123</div>
+                        <div class="demo-account" onclick="fillDemo('admin', 'admin123')">
+                            <div class="demo-email"></div>
+                            <div class="demo-password"></div>
                         </div>
                     </div>
                 </div>
@@ -488,9 +504,10 @@
         }
 
         // Fill demo account details
-        function fillDemo(email, password) {
-            document.getElementById('<%= txtEmail.ClientID %>').value = email;
+        function fillDemo(username, password) {
+            document.getElementById('<%= txtUsername.ClientID %>').value = username;
             document.getElementById('<%= txtPassword.ClientID %>').value = password;
+            checkUserType();
             createCelebration();
 
             // Show success message
@@ -506,6 +523,20 @@
             
             if (errorPanel) {
                 errorPanel.style.display = 'none';
+            }
+        }
+
+        // Check if input is admin username
+        function checkUserType() {
+            const username = document.getElementById('<%= txtUsername.ClientID %>').value;
+            const badge = document.getElementById('userTypeBadge');
+            
+            if (username === 'admin' || username === 'administrator') {
+                badge.textContent = 'Admin Login';
+                badge.style.background = 'linear-gradient(135deg, #2E8B57 0%, #3CB371 100%)';
+            } else {
+                badge.textContent = 'User Login';
+                badge.style.background = 'linear-gradient(135deg, #8B0000 0%, #B22222 100%)';
             }
         }
 
@@ -564,6 +595,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             createInstruments();
             createCelebration();
+            checkUserType();
             
             const inputs = document.querySelectorAll('.form-control');
             inputs.forEach(input => {
@@ -576,11 +608,11 @@
                 });
             });
 
-            // Auto focus on email field
-            const emailField = document.getElementById('<%= txtEmail.ClientID %>');
-            if (emailField) {
+            // Auto focus on username field
+            const usernameField = document.getElementById('<%= txtUsername.ClientID %>');
+            if (usernameField) {
                 setTimeout(() => {
-                    emailField.focus();
+                    usernameField.focus();
                 }, 400);
             }
         });
@@ -646,3 +678,6 @@
         setInterval(createCelebration, 7000);
     </script>
 </asp:Content>
+
+
+

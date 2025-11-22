@@ -42,6 +42,33 @@ namespace JivanBandhan4
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl weekViewsCount;
 
         /// <summary>
+        /// monthViewsCount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl monthViewsCount;
+
+        /// <summary>
+        /// rptProfileViewsTable control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptProfileViewsTable;
+
+        /// <summary>
+        /// pnlNoViewsTable control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlNoViewsTable;
+
+        /// <summary>
         /// rptProfileViews control.
         /// </summary>
         /// <remarks>
@@ -58,5 +85,32 @@ namespace JivanBandhan4
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlNoViews;
+
+        /// <summary>
+        /// hdnCurrentUserID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hdnCurrentUserID;
+
+        /// <summary>
+        /// hdnCurrentUserGender control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hdnCurrentUserGender;
+
+        /// <summary>
+        /// hdnCurrentUserMembership control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hdnCurrentUserMembership;
     }
 }

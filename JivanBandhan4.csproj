@@ -70,6 +70,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AdminDashboard.aspx" />
+    <Content Include="AdminLogin.aspx" />
+    <Content Include="BrowseProfile.aspx" />
     <Content Include="carousel\shivhar_chavan_create_5_diffrent_indian_maharashtriyan_couple_photo_on_wedding_d_5ba1feca-e057-4e14-847f-5232811b42ec %281%29.png" />
     <Content Include="carousel\shivhar_chavan_create_5_diffrent_indian_maharashtriyan_couple_photo_on_wedding_d_8dc20384-2e5e-4c1f-bb08-c275caf9b003.png" />
     <Content Include="carousel\shivhar_chavan_create_5_diffrent_indian_maharashtriyan_couple_photo_on_wedding_d_a8d17bf1-99a9-4b3f-aee8-dfaaa7381000.png" />
@@ -90,10 +93,39 @@
     <Content Include="SearchProfiles.aspx" />
     <Content Include="Shortlisted.aspx" />
     <Content Include="TotalViews.aspx" />
+    <Content Include="UserManagement.aspx" />
     <Content Include="ViewUserProfile.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminDashboard.aspx.cs">
+      <DependentUpon>AdminDashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AdminDashboard.aspx.designer.cs">
+      <DependentUpon>AdminDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AdminLogin.aspx.cs">
+      <DependentUpon>AdminLogin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AdminLogin.aspx.designer.cs">
+      <DependentUpon>AdminLogin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AdminMasterPage.Master.cs">
+      <DependentUpon>AdminMasterPage.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AdminMasterPage.Master.designer.cs">
+      <DependentUpon>AdminMasterPage.Master</DependentUpon>
+    </Compile>
+    <Compile Include="BrowseProfile.aspx.cs">
+      <DependentUpon>BrowseProfile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BrowseProfile.aspx.designer.cs">
+      <DependentUpon>BrowseProfile.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Dashboard.aspx.cs">
       <DependentUpon>Dashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -196,6 +228,13 @@
     <Compile Include="TotalViews.aspx.designer.cs">
       <DependentUpon>TotalViews.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UserManagement.aspx.cs">
+      <DependentUpon>UserManagement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserManagement.aspx.designer.cs">
+      <DependentUpon>UserManagement.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ViewUserProfile.aspx.cs">
       <DependentUpon>ViewUserProfile.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -206,6 +245,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MasterPage.Master" />
+    <Content Include="AdminMasterPage.Master" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

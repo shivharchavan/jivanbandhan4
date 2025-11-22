@@ -276,6 +276,15 @@ namespace JivanBandhan4
         protected global::System.Web.UI.WebControls.DropDownList ddlEducation;
 
         /// <summary>
+        /// ddlOccupation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlOccupation;
+
+        /// <summary>
         /// ddlReligion control.
         /// </summary>
         /// <remarks>

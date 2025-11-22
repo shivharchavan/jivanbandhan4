@@ -1,6 +1,2002 @@
 ﻿<%@ Page Title="Marathi Matrimony - Interests" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeBehind="Interests.aspx.cs" Inherits="JivanBandhan4.Interests" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <style type="text/css">
+        /* Main Container Styles */
+        .interests-container {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+            font-family: 'Nirmala UI', 'Arial Unicode MS', sans-serif;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, #8B0000 0%, #B22222 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(45deg);
+        }
+        
+        /* Tab Container Styles */
+        .tab-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .tab-header {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            position: relative;
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #6c757d;
+            border-bottom: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .tab-button:hover::before {
+            left: 100%;
+        }
+        
+        .tab-button.active {
+            color: #8B0000;
+            border-bottom-color: #8B0000;
+            background: white;
+        }
+        
+        .tab-button:hover {
+            color: #8B0000;
+            background: rgba(139, 0, 0, 0.05);
+        }
+        
+        .tab-content {
+            padding: 30px;
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Interest Card Layout */
+        .interest-card {
+            background: white;
+            border-radius: 15px;
+            padding: 0;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #8B0000;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .interest-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            border-left-color: #B22222;
+        }
+        
+        /* Profile View Area */
+        .profile-view-area {
+            flex: 1;
+            cursor: pointer;
+            position: relative;
+            padding: 20px 20px 0 20px;
+            margin: 0;
+            border-radius: 10px 10px 0 0;
+            transition: all 0.3s ease;
+        }
+        
+        .profile-view-area:hover {
+            background: rgba(139, 0, 0, 0.03);
+        }
+        
+        .interest-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .profile-view-area:hover .interest-avatar {
+            transform: scale(1.05);
+            border-color: #8B0000;
+        }
+        
+        .interest-content {
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .interest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .interest-user-info h4 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .interest-user-details {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+        
+        .interest-meta {
+            text-align: right;
+        }
+        
+        .interest-time {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+        
+        /* Interest Actions */
+        .interest-actions {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        /* Button Styles */
+        .btn-interest-action {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-interest-action::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-interest-action:hover::before {
+            left: 100%;
+        }
+        
+        .btn-accept {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        
+        .btn-reject {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            color: white;
+        }
+        
+        .btn-withdraw {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+        
+        .btn-view-profile {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+        }
+        
+        .btn-resend {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+            color: #212529;
+        }
+        
+        .btn-interest-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .btn-interest-action:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .status-pending {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .status-accepted {
+            background: linear-gradient(135deg, #d1edff 0%, #a8d5ff 100%);
+            color: #004085;
+            border: 1px solid #a8d5ff;
+        }
+        
+        .status-rejected {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            color: #dee2e6;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+        
+        /* Stats Overview */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-top: 4px solid #8B0000;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 0, 0, 0.03), transparent);
+            transition: left 0.6s;
+        }
+        
+        .stat-card:hover::before {
+            left: 100%;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #8B0000;
+            display: block;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        /* Profile Click Hint */
+        .profile-click-hint {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(139, 0, 0, 0.9);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+        }
+        
+        .profile-view-area:hover .profile-click-hint {
+            opacity: 1;
+        }
+        
+        /* Loading Animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #8B0000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Notification Styles */
+        .custom-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            z-index: 10000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            max-width: 300px;
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        
+        .custom-notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .notification-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+        
+        .notification-error {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+        
+        .notification-info {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        }
+        
+        .notification-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+            color: #212529;
+        }
+        
+        /* Profile Gender Badge */
+        .profile-gender-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        
+        .gender-male {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+        }
+        
+        .gender-female {
+            background: linear-gradient(135deg, #e83e8c 0%, #d91a72 100%);
+            color: white;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .interest-header {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+            }
+            
+            .interest-meta {
+                text-align: left;
+                margin-top: 10px;
+            }
+            
+            .interest-actions {
+                justify-content: center;
+            }
+            
+            .tab-button {
+                padding: 15px 10px;
+                font-size: 0.9rem;
+            }
+            
+            .stats-overview {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .stat-card {
+                padding: 20px 15px;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .interest-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-interest-action {
+                width: 200px;
+                margin-bottom: 5px;
+            }
+            
+            .tab-header {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                padding: 12px;
+            }
+        }
+        
+        /* Back Button */
+        .btn-back {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            color: white;
+        }
+        
+        /* Animation for new interests */
+        @keyframes highlight {
+            0% { background-color: rgba(139, 0, 0, 0.1); }
+            100% { background-color: transparent; }
+        }
+        
+        .new-interest {
+            animation: highlight 2s ease-in-out;
+        }
+    </style>
+
+    <div class="interests-container">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1>💝 Interests</h1>
+                        <p class="mb-0">Interests you have received and sent</p>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <asp:Button ID="btnBackToDashboard" runat="server" Text="🏠 Back to Dashboard" 
+                            CssClass="btn btn-light" OnClick="btnBackToDashboard_Click" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <span class="stat-number"><asp:Label ID="lblTotalReceived" runat="server" Text="0"></asp:Label></span>
+                    <span class="stat-label">Received Interests</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number"><asp:Label ID="lblTotalSent" runat="server" Text="0"></asp:Label></span>
+                    <span class="stat-label">Sent Interests</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number"><asp:Label ID="lblAccepted" runat="server" Text="0"></asp:Label></span>
+                    <span class="stat-label">Accepted</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number"><asp:Label ID="lblPending" runat="server" Text="0"></asp:Label></span>
+                    <span class="stat-label">Pending</span>
+                </div>
+            </div>
+
+            <!-- Tab Container -->
+            <div class="tab-container">
+                <!-- Tab Header -->
+                <div class="tab-header">
+                    <button class="tab-button active" onclick="switchTab('received')">
+                        📥 Received Interests (<span id="receivedCount"><asp:Label ID="lblReceivedCount" runat="server" Text="0"></asp:Label></span>)
+                    </button>
+                    <button class="tab-button" onclick="switchTab('sent')">
+                        📤 Sent Interests (<span id="sentCount"><asp:Label ID="lblSentCount" runat="server" Text="0"></asp:Label></span>)
+                    </button>
+                </div>
+
+                <!-- Received Interests Tab -->
+                <div id="received-tab" class="tab-content active">
+                    <h3 class="mb-4" style="color: #8B0000;">
+                        <i class="fas fa-inbox"></i> Interests You've Received
+                    </h3>
+                    
+                    <asp:Repeater ID="rptReceivedInterests" runat="server" OnItemDataBound="rptReceivedInterests_ItemDataBound">
+                        <ItemTemplate>
+                            <div class="interest-card" data-interestid='<%# Eval("InterestID") %>'>
+                                <!-- Profile view area -->
+                                <div class="profile-view-area" onclick='viewProfile(<%# Eval("SentByUserID") %>)'>
+                                    <div class="profile-click-hint">👆 View Profile</div>
+                                    
+                                    <div class="interest-content">
+                                        <div class="interest-header">
+                                            <div class="interest-user-info">
+                                                <div class="d-flex align-items-center">
+                                                    <asp:Image ID="imgUser" runat="server" CssClass="interest-avatar" 
+                                                        ImageUrl='<%# GetUserPhotoUrl(Eval("SentByUserID")) %>'
+                                                        onerror="this.src='Images/default-profile.png'" />
+                                                    <div class="ms-3">
+                                                        <h4 class="mb-1">
+                                                            <%# Eval("FullName") %>
+                                                            <span class='profile-gender-badge gender-<%# Eval("Gender").ToString().ToLower() %>'>
+                                                                <%# Eval("Gender") %>
+                                                            </span>
+                                                        </h4>
+                                                        <div class="interest-user-details">
+                                                            <%# CalculateAge(Eval("DateOfBirth")) %> Years | <%# Eval("Occupation") %> | <%# Eval("City") %>, <%# Eval("State") %>
+                                                        </div>
+                                                        <div class="interest-user-details text-success">
+                                                            <small>📅 <%# FormatDate(Eval("SentDate")) %></small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="interest-meta">
+                                                <div class="status-badge <%# GetStatusClass(Eval("Status")) %>">
+                                                    <asp:Label ID="lblStatus" runat="server" Text='<%# GetStatusText(Eval("Status")) %>'></asp:Label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Actions section -->
+                                <div class="interest-actions">
+                                    <asp:Button ID="btnViewProfile" runat="server" Text="👁️ View Profile" 
+                                        CssClass="btn-interest-action btn-view-profile" 
+                                        CommandArgument='<%# Eval("SentByUserID") %>' 
+                                        OnClientClick='viewProfile(<%# Eval("SentByUserID") %>); return false;' />
+                                    
+                                    <asp:Button ID="btnAccept" runat="server" Text="✅ Accept" 
+                                        CssClass="btn-interest-action btn-accept" 
+                                        CommandArgument='<%# Eval("InterestID") %>' 
+                                        OnClick="btnAccept_Click" 
+                                        Visible='<%# Eval("Status").ToString() == "Pending" %>' 
+                                        OnClientClick='return confirmAction(this, "Are you sure you want to accept this interest?");' />
+                                    
+                                    <asp:Button ID="btnReject" runat="server" Text="❌ Reject" 
+                                        CssClass="btn-interest-action btn-reject" 
+                                        CommandArgument='<%# Eval("InterestID") %>' 
+                                        OnClick="btnReject_Click" 
+                                        Visible='<%# Eval("Status").ToString() == "Pending" %>' 
+                                        OnClientClick='return confirmAction(this, "Are you sure you want to reject this interest?");' />
+                                    
+                                    <asp:Button ID="btnSendMessage" runat="server" Text="💌 Send Message" 
+                                        CssClass="btn-interest-action btn-view-profile" 
+                                        CommandArgument='<%# Eval("SentByUserID") %>' 
+                                        OnClick="btnSendMessage_Click" 
+                                        Visible='<%# Eval("Status").ToString() == "Accepted" %>' 
+                                        OnClientClick='showButtonLoading(this, "Redirecting...");' />
+                                </div>
+                            </div>
+                        </ItemTemplate>
+                    </asp:Repeater>
+                    
+                    <asp:Panel ID="pnlNoReceivedInterests" runat="server" Visible="false" CssClass="empty-state">
+                        <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+                        <h4 class="text-muted">No interests received yet</h4>
+                        <p class="text-muted">When someone shows interest in you, it will appear here</p>
+                        <asp:Button ID="btnImproveProfile" runat="server" Text="📈 Improve Profile" 
+                            CssClass="btn btn-primary mt-2" OnClick="btnImproveProfile_Click" />
+                    </asp:Panel>
+                </div>
+
+                <!-- Sent Interests Tab -->
+                <div id="sent-tab" class="tab-content">
+                    <h3 class="mb-4" style="color: #8B0000;">
+                        <i class="fas fa-paper-plane"></i> Interests You've Sent
+                    </h3>
+                    
+                    <asp:Repeater ID="rptSentInterests" runat="server" OnItemDataBound="rptSentInterests_ItemDataBound">
+                        <ItemTemplate>
+                            <div class="interest-card" data-interestid='<%# Eval("InterestID") %>'>
+                                <!-- Profile view area -->
+                                <div class="profile-view-area" onclick='viewProfile(<%# Eval("TargetUserID") %>)'>
+                                    <div class="profile-click-hint">👆 View Profile</div>
+                                    
+                                    <div class="interest-content">
+                                        <div class="interest-header">
+                                            <div class="interest-user-info">
+                                                <div class="d-flex align-items-center">
+                                                    <asp:Image ID="imgUser" runat="server" CssClass="interest-avatar" 
+                                                        ImageUrl='<%# GetUserPhotoUrl(Eval("TargetUserID")) %>'
+                                                        onerror="this.src='Images/default-profile.png'" />
+                                                    <div class="ms-3">
+                                                        <h4 class="mb-1">
+                                                            <%# Eval("FullName") %>
+                                                            <span class='profile-gender-badge gender-<%# Eval("Gender").ToString().ToLower() %>'>
+                                                                <%# Eval("Gender") %>
+                                                            </span>
+                                                        </h4>
+                                                        <div class="interest-user-details">
+                                                            <%# CalculateAge(Eval("DateOfBirth")) %> Years | <%# Eval("Occupation") %> | <%# Eval("City") %>, <%# Eval("State") %>
+                                                        </div>
+                                                        <div class="interest-user-details text-info">
+                                                            <small>📅 <%# FormatDate(Eval("SentDate")) %></small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="interest-meta">
+                                                <div class='status-badge <%# GetStatusClass(Eval("Status")) %>'>
+                                                    <%# GetStatusText(Eval("Status")) %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Actions section -->
+                                <div class="interest-actions">
+                                    <asp:Button ID="btnViewProfile" runat="server" Text="👁️ View Profile" 
+                                        CssClass="btn-interest-action btn-view-profile" 
+                                        CommandArgument='<%# Eval("TargetUserID") %>' 
+                                        OnClientClick='viewProfile(<%# Eval("TargetUserID") %>); return false;' />
+                                    
+                                    <asp:Button ID="btnWithdraw" runat="server" Text="🗑️ Withdraw" 
+                                        CssClass="btn-interest-action btn-withdraw" 
+                                        CommandArgument='<%# Eval("InterestID") %>' 
+                                        OnClick="btnWithdraw_Click" 
+                                        Visible='<%# Eval("Status").ToString() == "Pending" %>' 
+                                        OnClientClick='return confirmWithdraw(this);' />
+                                    
+                                    <asp:Button ID="btnResend" runat="server" Text="🔄 Resend" 
+                                        CssClass="btn-interest-action btn-resend" 
+                                        CommandArgument='<%# Eval("TargetUserID") %>' 
+                                        OnClick="btnResend_Click" 
+                                        Visible='<%# Eval("Status").ToString() == "Rejected" %>' 
+                                        OnClientClick='return confirmAction(this, "Are you sure you want to resend interest?");' />
+                                </div>
+                            </div>
+                        </ItemTemplate>
+                    </asp:Repeater>
+                    
+                    <asp:Panel ID="pnlNoSentInterests" runat="server" Visible="false" CssClass="empty-state">
+                        <i class="fas fa-paper-plane fa-4x text-muted mb-3"></i>
+                        <h4 class="text-muted">You haven't sent any interests yet</h4>
+                        <p class="text-muted">Find a partner and make contact by showing interest</p>
+                        <asp:Button ID="btnFindMatches" runat="server" Text="🔍 Find Matches" 
+                            CssClass="btn btn-primary mt-3" OnClick="btnFindMatches_Click" />
+                    </asp:Panel>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Fields -->
+    <asp:HiddenField ID="hdnCurrentUserID" runat="server" />
+    <asp:HiddenField ID="hdnCurrentUserGender" runat="server" />
+
+    <script type="text/javascript">
+        // Profile view function
+        function viewProfile(userID) {
+            console.log('Opening profile for user:', userID);
+            window.open('ViewProfile.aspx?UserID=' + userID, '_blank');
+            return false;
+        }
+
+        // ✅ FIXED: Confirm action with better handling
+        function confirmAction(button, message) {
+            if (confirm(message)) {
+                showButtonLoading(button);
+
+                // Get the parent form and submit it
+                var form = button.form;
+                if (form) {
+                    // Store the button that was clicked
+                    __doPostBack(button.name, '');
+                }
+                return true;
+            }
+            return false;
+        }
+
+        // ✅ FIXED: Confirm withdraw with custom message
+        function confirmWithdraw(button) {
+            return confirmAction(button, 'Are you sure you want to withdraw this interest? This action cannot be undone.');
+        }
+
+        // ✅ FIXED: Button loading state with better handling
+        function showButtonLoading(button, customText) {
+            const originalText = button.innerHTML;
+            const originalWidth = button.offsetWidth;
+            const loadingText = customText || 'Processing...';
+
+            // Set fixed width to prevent button resizing
+            button.style.minWidth = originalWidth + 'px';
+            button.innerHTML = '<span class="loading-spinner"></span>' + loadingText;
+            button.disabled = true;
+
+            // Re-enable after 10 seconds (safety net)
+            setTimeout(() => {
+                if (button.disabled) {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                    button.style.minWidth = '';
+                }
+            }, 10000);
+        }
+
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Hide all tabs
+            const allTabs = document.querySelectorAll('.tab-content');
+            allTabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            const allButtons = document.querySelectorAll('.tab-button');
+            allButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+
+            // Activate selected button
+            event.currentTarget.classList.add('active');
+
+            // Save active tab to session storage
+            sessionStorage.setItem('activeInterestsTab', tabName);
+        }
+
+        // ✅ FIXED: Enhanced notification system
+        function showNotification(message, type) {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.custom-notification');
+            existingNotifications.forEach(notification => {
+                notification.remove();
+            });
+
+            const notification = document.createElement('div');
+            notification.className = `custom-notification notification-${type}`;
+            notification.innerHTML = `
+            <div class="d-flex align-items-center">
+                <i class="fas ${getNotificationIcon(type)} me-2"></i>
+                <span>${message}</span>
+            </div>
+        `;
+
+            document.body.appendChild(notification);
+
+            // Show notification with animation
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 5000);
+        }
+
+        function getNotificationIcon(type) {
+            switch (type) {
+                case 'success': return 'fa-check-circle';
+                case 'error': return 'fa-exclamation-circle';
+                case 'warning': return 'fa-exclamation-triangle';
+                default: return 'fa-info-circle';
+            }
+        }
+
+        // ✅ FIXED: Initialize page with better event handling
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('Interests page loaded successfully');
+
+            // Add debug info for buttons
+            const acceptButtons = document.querySelectorAll('.btn-accept');
+            const rejectButtons = document.querySelectorAll('.btn-reject');
+
+            console.log(`Found ${acceptButtons.length} Accept buttons and ${rejectButtons.length} Reject buttons`);
+
+            // Add click event listeners for debugging
+            acceptButtons.forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    console.log('Accept button clicked:', this.getAttribute('CommandArgument'));
+                });
+            });
+
+            rejectButtons.forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    console.log('Reject button clicked:', this.getAttribute('CommandArgument'));
+                });
+            });
+
+            // Add hover effects to interest cards
+            const cards = document.querySelectorAll('.interest-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.12)';
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.08)';
+                });
+            });
+
+            // Restore active tab from session storage
+            const activeTab = sessionStorage.getItem('activeInterestsTab');
+            if (activeTab && activeTab !== 'received') {
+                const tabButtons = document.querySelectorAll('.tab-button');
+                const targetButton = tabButtons[activeTab === 'sent' ? 1 : 0];
+                if (targetButton) {
+                    targetButton.click();
+                }
+            }
+
+            // Prevent form submission on enter key
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        });
+
+        // Global error handler
+        window.addEventListener('error', function (e) {
+            console.error('JavaScript error:', e.error);
+            showNotification('An error occurred. Please refresh the page.', 'error');
+        });
+
+        // Handle AJAX errors
+        window.addEventListener('unhandledrejection', function (e) {
+            console.error('Unhandled promise rejection:', e.reason);
+            showNotification('An error occurred. Please try again.', 'error');
+        });
+    </script>
+</asp:Content>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<%--<%@ Page Title="Marathi Matrimony - Interests" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeBehind="Interests.aspx.cs" Inherits="JivanBandhan4.Interests" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <style>
+        /* Main Container Styles */
+        .interests-container {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+            font-family: 'Nirmala UI', 'Arial Unicode MS', sans-serif;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, #8B0000 0%, #B22222 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(45deg);
+        }
+        
+        /* Tab Container Styles */
+        .tab-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .tab-header {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            position: relative;
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #6c757d;
+            border-bottom: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .tab-button:hover::before {
+            left: 100%;
+        }
+        
+        .tab-button.active {
+            color: #8B0000;
+            border-bottom-color: #8B0000;
+            background: white;
+        }
+        
+        .tab-button:hover {
+            color: #8B0000;
+            background: rgba(139, 0, 0, 0.05);
+        }
+        
+        .tab-content {
+            padding: 30px;
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* NEW: Interest Card Layout - FIXED */
+        .interest-card {
+            background: white;
+            border-radius: 15px;
+            padding: 0; /* Remove padding from card */
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #8B0000;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column; /* Change to column layout */
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .interest-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            border-left-color: #B22222;
+        }
+        
+        /* NEW: Profile View Area */
+        .profile-view-area {
+            flex: 1;
+            cursor: pointer;
+            position: relative;
+            padding: 20px 20px 0 20px;
+            margin: 0;
+            border-radius: 10px 10px 0 0;
+            transition: all 0.3s ease;
+        }
+        
+        .profile-view-area:hover {
+            background: rgba(139, 0, 0, 0.03);
+        }
+        
+        .interest-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .profile-view-area:hover .interest-avatar {
+            transform: scale(1.05);
+            border-color: #8B0000;
+        }
+        
+        .interest-content {
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .interest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .interest-user-info h4 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .interest-user-details {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+        
+        .interest-meta {
+            text-align: right;
+        }
+        
+        .interest-time {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+        
+        /* NEW: Interest Actions - SEPARATED */
+        .interest-actions {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        /* Button Styles */
+        .btn-interest-action {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-interest-action::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-interest-action:hover::before {
+            left: 100%;
+        }
+        
+        .btn-accept {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        
+        .btn-reject {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            color: white;
+        }
+        
+        .btn-withdraw {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+        
+        .btn-view-profile {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+        }
+        
+        .btn-resend {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+            color: #212529;
+        }
+        
+        .btn-interest-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .status-pending {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .status-accepted {
+            background: linear-gradient(135deg, #d1edff 0%, #a8d5ff 100%);
+            color: #004085;
+            border: 1px solid #a8d5ff;
+        }
+        
+        .status-rejected {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            color: #dee2e6;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+        
+        /* Stats Overview */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-top: 4px solid #8B0000;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 0, 0, 0.03), transparent);
+            transition: left 0.6s;
+        }
+        
+        .stat-card:hover::before {
+            left: 100%;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #8B0000;
+            display: block;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        /* Profile Click Hint */
+        .profile-click-hint {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(139, 0, 0, 0.9);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+        }
+        
+        .profile-view-area:hover .profile-click-hint {
+            opacity: 1;
+        }
+        
+        /* Loading Animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #8B0000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Notification Styles */
+        .custom-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            z-index: 10000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            max-width: 300px;
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        
+        .custom-notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .notification-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+        
+        .notification-error {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+        
+        .notification-info {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        }
+        
+        .notification-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+            color: #212529;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .interest-header {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+            }
+            
+            .interest-meta {
+                text-align: left;
+                margin-top: 10px;
+            }
+            
+            .interest-actions {
+                justify-content: center;
+            }
+            
+            .tab-button {
+                padding: 15px 10px;
+                font-size: 0.9rem;
+            }
+            
+            .stats-overview {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .stat-card {
+                padding: 20px 15px;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .interest-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-interest-action {
+                width: 200px;
+                margin-bottom: 5px;
+            }
+            
+            .tab-header {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                padding: 12px;
+            }
+        }
+        
+        /* Back Button */
+        .btn-back {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            color: white;
+        }
+        
+        /* Animation for new interests */
+        @keyframes highlight {
+            0% { background-color: rgba(139, 0, 0, 0.1); }
+            100% { background-color: transparent; }
+        }
+        
+        .new-interest {
+            animation: highlight 2s ease-in-out;
+        }
+        
+        /* Enhanced profile info */
+        .profile-gender-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        
+        .gender-male {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+        }
+        
+        .gender-female {
+            background: linear-gradient(135deg, #e83e8c 0%, #d91a72 100%);
+            color: white;
+        }
+    </style>
+
+    <div class="interests-container">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1>💝 Interests</h1>
+                        <p class="mb-0">Interests you have received and sent</p>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <asp:Button ID="btnBackToDashboard" runat="server" Text="🏠 Back to Dashboard" 
+                            CssClass="btn btn-light" OnClick="btnBackToDashboard_Click" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <span class="stat-number"><asp:Label ID="lblTotalReceived" runat="server" Text="0"></asp:Label></span>
+                    <span class="stat-label">Received Interests</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number"><asp:Label ID="lblTotalSent" runat="server" Text="0"></asp:Label></span>
+                    <span class="stat-label">Sent Interests</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number"><asp:Label ID="lblAccepted" runat="server" Text="0"></asp:Label></span>
+                    <span class="stat-label">Accepted</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number"><asp:Label ID="lblPending" runat="server" Text="0"></asp:Label></span>
+                    <span class="stat-label">Pending</span>
+                </div>
+            </div>
+
+            <!-- Tab Container -->
+            <div class="tab-container">
+                <!-- Tab Header -->
+                <div class="tab-header">
+                    <button class="tab-button active" onclick="switchTab('received')">
+                        📥 Received Interests (<span id="receivedCount"><asp:Label ID="lblReceivedCount" runat="server" Text="0"></asp:Label></span>)
+                    </button>
+                    <button class="tab-button" onclick="switchTab('sent')">
+                        📤 Sent Interests (<span id="sentCount"><asp:Label ID="lblSentCount" runat="server" Text="0"></asp:Label></span>)
+                    </button>
+                </div>
+
+                <!-- Received Interests Tab -->
+                <div id="received-tab" class="tab-content active">
+                    <h3 class="mb-4" style="color: #8B0000;">
+                        <i class="fas fa-inbox"></i> Interests You've Received
+                        <small class="text-muted" style="font-size: 1rem;">
+                            (From members of opposite gender who have shown interest in you)
+                        </small>
+                    </h3>
+                    
+                    <asp:Repeater ID="rptReceivedInterests" runat="server" OnItemDataBound="rptReceivedInterests_ItemDataBound">
+                        <ItemTemplate>
+                            <div class="interest-card" data-interestid='<%# Eval("InterestID") %>' 
+                                data-userid='<%# Eval("SentByUserID") %>'>
+                                <!-- Profile view area - FIXED -->
+                                <div class="profile-view-area" onclick='handleProfileView(<%# Eval("SentByUserID") %>, event)'>
+                                    <div class="profile-click-hint">👆 View Profile</div>
+                                    
+                                    <div class="interest-content">
+                                        <div class="interest-header">
+                                            <div class="interest-user-info">
+                                                <div class="d-flex align-items-center">
+                                                    <asp:Image ID="imgUser" runat="server" CssClass="interest-avatar" 
+                                                        ImageUrl='<%# GetUserPhotoUrl(Eval("SentByUserID")) %>'
+                                                        onerror="this.src='Images/default-profile.png'" />
+                                                    <div class="ms-3">
+                                                        <h4 class="mb-1">
+                                                            <%# Eval("FullName") %>
+                                                            <span class='profile-gender-badge gender-<%# Eval("Gender").ToString().ToLower() %>'>
+                                                                <%# Eval("Gender") %>
+                                                            </span>
+                                                        </h4>
+                                                        <div class="interest-user-details">
+                                                            <%# CalculateAge(Eval("DateOfBirth")) %> Years | <%# Eval("Occupation") %> | <%# Eval("City") %>, <%# Eval("State") %>
+                                                        </div>
+                                                        <div class="interest-user-details text-success">
+                                                            <small>📅 Interest sent on <%# FormatDate(Eval("SentDate")) %></small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="interest-meta">
+                                                <div class="status-badge <%# GetStatusClass(Eval("Status")) %>">
+                                                    <asp:Label ID="lblStatus" runat="server" Text='<%# GetStatusText(Eval("Status")) %>'></asp:Label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Actions section - SEPARATED -->
+                                <div class="interest-actions">
+                                    <asp:Button ID="btnViewProfile" runat="server" Text="👁️ View Profile" 
+                                        CssClass="btn-interest-action btn-view-profile" 
+                                        CommandArgument='<%# Eval("SentByUserID") %>' 
+                                        OnClientClick='handleProfileView(<%# Eval("SentByUserID") %>, event); return false;' />
+                                    
+                                    <asp:Button ID="btnAccept" runat="server" Text="✅ Accept" 
+                                        CssClass="btn-interest-action btn-accept" 
+                                        CommandArgument='<%# Eval("InterestID") %>' 
+                                        OnClick="btnAccept_Click" 
+                                        Visible='<%# Eval("Status").ToString() == "Pending" %>' 
+                                        OnClientClick='showButtonLoading(this, "Accepting...");' />
+                                    
+                                    <asp:Button ID="btnReject" runat="server" Text="❌ Reject" 
+                                        CssClass="btn-interest-action btn-reject" 
+                                        CommandArgument='<%# Eval("InterestID") %>' 
+                                        OnClick="btnReject_Click" 
+                                        Visible='<%# Eval("Status").ToString() == "Pending" %>' 
+                                        OnClientClick='showButtonLoading(this, "Rejecting...");' />
+                                    
+                                    <asp:Button ID="btnSendMessage" runat="server" Text="💌 Send Message" 
+                                        CssClass="btn-interest-action btn-view-profile" 
+                                        CommandArgument='<%# Eval("SentByUserID") %>' 
+                                        OnClick="btnSendMessage_Click" 
+                                        Visible='<%# Eval("Status").ToString() == "Accepted" %>' 
+                                        OnClientClick='showButtonLoading(this, "Redirecting...");' />
+                                </div>
+                            </div>
+                        </ItemTemplate>
+                    </asp:Repeater>
+                    
+                    <asp:Panel ID="pnlNoReceivedInterests" runat="server" Visible="false" CssClass="empty-state">
+                        <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+                        <h4 class="text-muted">No interests received yet</h4>
+                        <p class="text-muted">When someone shows interest in you, it will appear here</p>
+                        <asp:Button ID="btnImproveProfile" runat="server" Text="📈 Improve Profile" 
+                            CssClass="btn btn-primary mt-2" OnClick="btnImproveProfile_Click" />
+                    </asp:Panel>
+                </div>
+
+                <!-- Sent Interests Tab -->
+                <div id="sent-tab" class="tab-content">
+                    <h3 class="mb-4" style="color: #8B0000;">
+                        <i class="fas fa-paper-plane"></i> Interests You've Sent
+                        <small class="text-muted" style="font-size: 1rem;">
+                            (To members of opposite gender you have shown interest in)
+                        </small>
+                    </h3>
+                    
+                    <asp:Repeater ID="rptSentInterests" runat="server" OnItemDataBound="rptSentInterests_ItemDataBound">
+                        <ItemTemplate>
+                            <div class="interest-card" data-interestid='<%# Eval("InterestID") %>'
+                                data-userid='<%# Eval("TargetUserID") %>'>
+                                <!-- Profile view area - FIXED -->
+                                <div class="profile-view-area" onclick='handleProfileView(<%# Eval("TargetUserID") %>, event)'>
+                                    <div class="profile-click-hint">👆 View Profile</div>
+                                    
+                                    <div class="interest-content">
+                                        <div class="interest-header">
+                                            <div class="interest-user-info">
+                                                <div class="d-flex align-items-center">
+                                                    <asp:Image ID="imgUser" runat="server" CssClass="interest-avatar" 
+                                                        ImageUrl='<%# GetUserPhotoUrl(Eval("TargetUserID")) %>'
+                                                        onerror="this.src='Images/default-profile.png'" />
+                                                    <div class="ms-3">
+                                                        <h4 class="mb-1">
+                                                            <%# Eval("FullName") %>
+                                                            <span class='profile-gender-badge gender-<%# Eval("Gender").ToString().ToLower() %>'>
+                                                                <%# Eval("Gender") %>
+                                                            </span>
+                                                        </h4>
+                                                        <div class="interest-user-details">
+                                                            <%# CalculateAge(Eval("DateOfBirth")) %> Years | <%# Eval("Occupation") %> | <%# Eval("City") %>, <%# Eval("State") %>
+                                                        </div>
+                                                        <div class="interest-user-details text-info">
+                                                            <small>📅 Interest sent on <%# FormatDate(Eval("SentDate")) %></small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="interest-meta">
+                                                <div class='status-badge <%# GetStatusClass(Eval("Status")) %>'>
+                                                    <%# GetStatusText(Eval("Status")) %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Actions section - SEPARATED -->
+                                <div class="interest-actions">
+                                    <asp:Button ID="btnViewProfile" runat="server" Text="👁️ View Profile" 
+                                        CssClass="btn-interest-action btn-view-profile" 
+                                        CommandArgument='<%# Eval("TargetUserID") %>' 
+                                        OnClientClick='handleProfileView(<%# Eval("TargetUserID") %>, event); return false;' />
+                                    
+                                    <asp:Button ID="btnWithdraw" runat="server" Text="🗑️ Withdraw" 
+                                        CssClass="btn-interest-action btn-withdraw" 
+                                        CommandArgument='<%# Eval("InterestID") %>' 
+                                        OnClick="btnWithdraw_Click" 
+                                        Visible='<%# Eval("Status").ToString() == "Pending" %>' 
+                                        OnClientClick='return confirmWithdraw(this, <%# Eval("InterestID") %>);' />
+                                    
+                                    <asp:Button ID="btnResend" runat="server" Text="🔄 Resend" 
+                                        CssClass="btn-interest-action btn-resend" 
+                                        CommandArgument='<%# Eval("TargetUserID") %>' 
+                                        OnClick="btnResend_Click" 
+                                        Visible='<%# Eval("Status").ToString() == "Rejected" %>' 
+                                        OnClientClick='showButtonLoading(this, "Resending...");' />
+                                </div>
+                            </div>
+                        </ItemTemplate>
+                    </asp:Repeater>
+                    
+                    <asp:Panel ID="pnlNoSentInterests" runat="server" Visible="false" CssClass="empty-state">
+                        <i class="fas fa-paper-plane fa-4x text-muted mb-3"></i>
+                        <h4 class="text-muted">You haven't sent any interests yet</h4>
+                        <p class="text-muted">Find a partner and make contact by showing interest</p>
+                        <asp:Button ID="btnFindMatches" runat="server" Text="🔍 Find Matches" 
+                            CssClass="btn btn-primary mt-3" OnClick="btnFindMatches_Click" />
+                    </asp:Panel>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Fields -->
+    <asp:HiddenField ID="hdnCurrentUserID" runat="server" />
+    <asp:HiddenField ID="hdnCurrentUserGender" runat="server" />
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    
+    <script>
+        // FIXED: Profile view function
+        function handleProfileView(userID, event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            console.log('Viewing profile:', userID);
+            
+            // Track profile view
+            trackProfileView(userID);
+            
+            // Redirect to profile page
+            window.location.href = 'ViewUserProfile.aspx?UserID=' + userID + '&from=interests';
+            
+            return false;
+        }
+
+        // FIXED: Track profile view
+        function trackProfileView(viewedUserID) {
+            const currentUserID = document.getElementById('<%= hdnCurrentUserID.ClientID %>').value;
+            
+            // Use fetch instead of jQuery for better performance
+            fetch('Interests.aspx/TrackProfileView', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    currentUserID: parseInt(currentUserID),
+                    viewedUserID: parseInt(viewedUserID)
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Profile view tracked:', data.d);
+            })
+            .catch(error => {
+                console.log('Error tracking profile view:', error);
+            });
+        }
+
+        // FIXED: Button loading with better handling
+        function showButtonLoading(button, text) {
+            const originalText = button.innerHTML;
+            const originalWidth = button.offsetWidth;
+            
+            // Set fixed width to prevent button resizing
+            button.style.minWidth = originalWidth + 'px';
+            button.innerHTML = `<span class="loading-spinner"></span>${text}`;
+            button.disabled = true;
+            
+            // Revert after 5 seconds if still loading (safety net)
+            setTimeout(() => {
+                if (button.disabled) {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                    button.style.minWidth = '';
+                }
+            }, 5000);
+        }
+
+        // FIXED: Confirm withdraw with better UX
+        function confirmWithdraw(button, interestID) {
+            if (confirm('Are you sure you want to withdraw this interest? This action cannot be undone.')) {
+                showButtonLoading(button, 'Withdrawing...');
+                
+                // Add small delay to show loading state
+                setTimeout(() => {
+                    return true;
+                }, 100);
+            } else {
+                return false;
+            }
+        }
+
+        // FIXED: Tab switching without page reload
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+
+            // Activate selected button
+            event.target.classList.add('active');
+            
+            // Save active tab to session storage
+            sessionStorage.setItem('activeInterestsTab', tabName);
+            
+            // Prevent default behavior
+            event.preventDefault();
+            return false;
+        }
+
+        // Enhanced notification system
+        function showNotification(message, type) {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.custom-notification');
+            existingNotifications.forEach(notification => {
+                notification.remove();
+            });
+            
+            const notification = document.createElement('div');
+            notification.className = `custom-notification notification-${type}`;
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas ${getNotificationIcon(type)} me-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Show notification with animation
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 5000);
+        }
+
+        function getNotificationIcon(type) {
+            switch(type) {
+                case 'success': return 'fa-check-circle';
+                case 'error': return 'fa-exclamation-circle';
+                case 'warning': return 'fa-exclamation-triangle';
+                default: return 'fa-info-circle';
+            }
+        }
+
+        // FIXED: Initialize with better event handling
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('Interests page loaded - Fixed version');
+            
+            // Remove any existing problematic event listeners
+            const cards = document.querySelectorAll('.interest-card');
+            cards.forEach(card => {
+                // Remove any old click handlers
+                card.onclick = null;
+                
+                // Add clean hover effects
+                card.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.12)';
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.08)';
+                });
+            });
+
+            // Prevent form submission on enter key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                }
+            });
+
+            // Restore active tab from session storage
+            const activeTab = sessionStorage.getItem('activeInterestsTab');
+            if (activeTab && activeTab !== 'received') {
+                // Simulate click on the tab button
+                const tabButton = document.querySelector(`.tab-button:nth-child(${activeTab === 'sent' ? 2 : 1})`);
+                if (tabButton) {
+                    tabButton.click();
+                }
+            }
+
+            // Load current user information
+            loadCurrentUserInfo();
+        });
+
+        // Load current user information
+        function loadCurrentUserInfo() {
+            const currentUserGender = document.getElementById('<%= hdnCurrentUserGender.ClientID %>')?.value;
+            console.log('Current user gender:', currentUserGender);
+
+            // You can use this information to customize the display
+            if (currentUserGender) {
+                document.body.setAttribute('data-user-gender', currentUserGender.toLowerCase());
+            }
+        }
+
+        // Refresh interests count
+        function refreshInterestsCount() {
+            console.log('Refreshing interest counts...');
+            // Could implement AJAX refresh here if needed
+        }
+
+        // Handle network errors
+        function handleNetworkError(error) {
+            console.error('Network error:', error);
+            showNotification('Network error! Please check your internet connection.', 'error');
+        }
+    </script>
+</asp:Content>
+
+
+
+
+
+
+
+
+--%>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<%--<%@ Page Title="Marathi Matrimony - Interests" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeBehind="Interests.aspx.cs" Inherits="JivanBandhan4.Interests" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <style>
         /* Main Container Styles */
         .interests-container {
@@ -1071,4 +3067,4 @@
 
         window.addEventListener('resize', handleResize);
     </script>
-</asp:Content>
+</asp:Content>--%>

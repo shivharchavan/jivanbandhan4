@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace JivanBandhan4
+namespace JivanBandhan4.Admin
 {
 
 
-    public partial class Login
+    public partial class AdminLogin
     {
 
         /// <summary>
@@ -42,15 +42,6 @@ namespace JivanBandhan4
         protected global::System.Web.UI.WebControls.TextBox txtPassword;
 
         /// <summary>
-        /// chkRemember control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkRemember;
-
-        /// <summary>
         /// btnLogin control.
         /// </summary>
         /// <remarks>
@@ -60,39 +51,12 @@ namespace JivanBandhan4
         protected global::System.Web.UI.WebControls.Button btnLogin;
 
         /// <summary>
-        /// pnlError control.
+        /// lblMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlError;
-
-        /// <summary>
-        /// lblError control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblError;
-
-        /// <summary>
-        /// pnlSuccess control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlSuccess;
-
-        /// <summary>
-        /// lblSuccess control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSuccess;
+        protected global::System.Web.UI.WebControls.Label lblMessage;
     }
 }

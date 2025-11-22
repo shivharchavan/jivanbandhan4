@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace JivanBandhan4
+namespace JivanBandhan
 {
 
 
@@ -15,48 +15,39 @@ namespace JivanBandhan4
     {
 
         /// <summary>
-        /// ddlLookingFor control.
+        /// btnFindPartner control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlLookingFor;
+        protected global::System.Web.UI.WebControls.Button btnFindPartner;
 
         /// <summary>
-        /// ddlReligion control.
+        /// btnRegisterFree control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlReligion;
+        protected global::System.Web.UI.WebControls.Button btnRegisterFree;
 
         /// <summary>
-        /// ddlAge control.
+        /// btnLogin control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlAge;
+        protected global::System.Web.UI.WebControls.Button btnLogin;
 
         /// <summary>
-        /// btnSearch control.
+        /// btnRegisterNow control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSearch;
-
-        /// <summary>
-        /// btnAdvancedSearch control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnAdvancedSearch;
+        protected global::System.Web.UI.WebControls.Button btnRegisterNow;
     }
 }

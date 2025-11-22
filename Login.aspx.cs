@@ -16,9 +16,9 @@ namespace JivanBandhan4
             if (!IsPostBack)
             {
                 // Check if user is already logged in
-                if (Session["UserEmail"] != null || User.Identity.IsAuthenticated)
+                if (Session["UserEmail"] != null || Session["AdminUserID"] != null)
                 {
-                    Response.Redirect("Dashboard.aspx");
+                    RedirectToDashboard();
                 }
 
                 // Check for logout
@@ -33,105 +33,81 @@ namespace JivanBandhan4
                     ShowSuccess("Registration successful! Please login to continue.");
                 }
 
-                // Set focus to email field
+                // Set focus to username field
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "SetFocus",
-                    $"document.getElementById('{txtEmail.ClientID}').focus();", true);
+                    $"document.getElementById('{txtUsername.ClientID}').focus();", true);
             }
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            string email = txtEmail.Text.Trim();
+            string username = txtUsername.Text.Trim();
             string password = txtPassword.Text;
 
             // Basic validation
-            if (string.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(username))
             {
-                ShowError("Please enter your email address");
-                txtEmail.Focus();
+                ShowError("कृपया आपला ईमेल पत्ता किंवा युजरनेम टाका");
+                txtUsername.Focus();
                 return;
             }
 
             if (string.IsNullOrEmpty(password))
             {
-                ShowError("Please enter your password");
+                ShowError("कृपया आपला पासवर्ड टाका");
                 txtPassword.Focus();
                 return;
             }
 
-            if (!IsValidEmail(email))
+            // Debug information
+            System.Diagnostics.Debug.WriteLine($"Login attempt: Username={username}, Password={password}");
+
+            // First try to authenticate as Admin
+            if (AuthenticateAdmin(username, password))
             {
-                ShowError("Please enter a valid email address");
-                txtEmail.Focus();
+                // Admin authentication successful
+                System.Diagnostics.Debug.WriteLine("Admin login successful");
+                FormsAuthentication.SetAuthCookie(username, chkRemember.Checked);
+                Response.Redirect("AdminDashboard.aspx");
                 return;
             }
-
-            // Authenticate user
-            if (AuthenticateUser(email, password))
+            // Then try to authenticate as User
+            else if (AuthenticateUser(username, password))
             {
-                // Create authentication ticket
-                FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
-                    1, // version
-                    email, // user name
-                    DateTime.Now, // issue date
-                    DateTime.Now.AddMinutes(1440), // expiration (24 hours)
-                    chkRemember.Checked, // persistent
-                    GetUserID(email).ToString(), // user data
-                    FormsAuthentication.FormsCookiePath);
-
-                // Encrypt the ticket
-                string encryptedTicket = FormsAuthentication.Encrypt(ticket);
-
-                // Create cookie
-                HttpCookie authCookie = new HttpCookie(
-                    FormsAuthentication.FormsCookieName,
-                    encryptedTicket);
-
-                if (chkRemember.Checked)
-                    authCookie.Expires = ticket.Expiration;
-
-                // Add cookie to response
-                Response.Cookies.Add(authCookie);
-
-                // SET SESSION VARIABLES
-                Session["UserEmail"] = email;
-                Session["UserID"] = GetUserID(email);
-                Session["UserName"] = GetUserName(email);
-                Session["LastActivity"] = DateTime.Now;
-
-                // Update last active time in database
-                UpdateLastActive(email);
-
-                // Log login activity
-                LogLoginActivity(email);
-
-                // Redirect to dashboard
+                // User authentication successful
+                System.Diagnostics.Debug.WriteLine("User login successful");
+                FormsAuthentication.SetAuthCookie(username, chkRemember.Checked);
                 Response.Redirect("Dashboard.aspx");
+                return;
             }
             else
             {
-                ShowError("Invalid email or password. Please try again.");
+                ShowError("अवैध ईमेल/युजरनेम किंवा पासवर्ड. कृपया पुन्हा प्रयत्न करा.");
                 // Clear password field on error
                 txtPassword.Text = "";
                 txtPassword.Focus();
 
                 // Log failed login attempt
-                LogFailedLoginAttempt(email);
+                LogFailedLoginAttempt(username);
             }
         }
 
-        private bool AuthenticateUser(string email, string password)
+        private bool AuthenticateUser(string username, string password)
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    // SECURITY IMPROVEMENT: Consider using password hashing in production
-                    string query = "SELECT UserID, Password, FullName, IsActive FROM Users WHERE Email = @Email";
+                    // Check only email field for users (UserID is integer, so we can't compare with string directly)
+                    string query = @"SELECT UserID, Email, Password, FullName, IsActive 
+                                   FROM Users 
+                                   WHERE Email = @Username 
+                                   AND Password = @Password AND IsActive = 1";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@Email", email);
+                        cmd.Parameters.AddWithValue("@Username", username);
+                        cmd.Parameters.AddWithValue("@Password", password);
 
                         conn.Open();
                         SqlDataReader reader = cmd.ExecuteReader();
@@ -142,26 +118,38 @@ namespace JivanBandhan4
                             bool isActive = Convert.ToBoolean(reader["IsActive"]);
                             if (!isActive)
                             {
-                                ShowError("Your account has been deactivated. Please contact support.");
+                                ShowError("तुमचे खाते निष्क्रिय केले गेले आहे. कृपया सपोर्टशी संपर्क साधा.");
                                 return false;
                             }
 
-                            string storedPassword = reader["Password"].ToString();
-                            // Direct string comparison - SIMPLE PASSWORD CHECK
-                            // SECURITY NOTE: In production, use proper password hashing
-                            bool passwordMatch = password == storedPassword;
+                            // SET USER SESSION VARIABLES
+                            Session["UserEmail"] = reader["Email"].ToString();
+                            Session["UserID"] = Convert.ToInt32(reader["UserID"]);
+                            Session["UserName"] = reader["FullName"].ToString();
+                            Session["UserType"] = "User";
+                            Session["LastActivity"] = DateTime.Now;
 
-                            if (passwordMatch)
-                            {
-                                // Store user name in session for later use
-                                Session["UserFullName"] = reader["FullName"].ToString();
-                            }
+                            // Update last active time in database
+                            UpdateLastActive(reader["Email"].ToString());
 
-                            return passwordMatch;
+                            // Log login activity
+                            LogLoginActivity(reader["Email"].ToString(), "User");
+
+                            System.Diagnostics.Debug.WriteLine($"User session set: Email={reader["Email"]}, UserID={reader["UserID"]}");
+
+                            return true;
                         }
                         else
                         {
-                            // User not found
+                            // User not found - try to see if user exists but password is wrong
+                            if (CheckUserExists(username))
+                            {
+                                System.Diagnostics.Debug.WriteLine("User exists but password is incorrect");
+                            }
+                            else
+                            {
+                                System.Diagnostics.Debug.WriteLine("User not found with email: " + username);
+                            }
                             return false;
                         }
                     }
@@ -170,43 +158,89 @@ namespace JivanBandhan4
             catch (Exception ex)
             {
                 // Log the error
-                System.Diagnostics.Debug.WriteLine($"Login error: {ex.Message}");
-                ShowError("Login process error. Please try again.");
+                System.Diagnostics.Debug.WriteLine($"User login error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                ShowError("लॉगिन प्रक्रिया त्रुटी. कृपया पुन्हा प्रयत्न करा.");
                 return false;
             }
         }
 
-        private int GetUserID(string email)
+        private bool CheckUserExists(string email)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            try
             {
-                string query = "SELECT UserID FROM Users WHERE Email = @Email";
-
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    cmd.Parameters.AddWithValue("@Email", email);
-
-                    conn.Open();
-                    object result = cmd.ExecuteScalar();
-                    return result != null ? Convert.ToInt32(result) : 0;
+                    string query = "SELECT COUNT(*) FROM Users WHERE Email = @Email";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Email", email);
+                        conn.Open();
+                        int count = Convert.ToInt32(cmd.ExecuteScalar());
+                        return count > 0;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"CheckUserExists error: {ex.Message}");
+                return false;
             }
         }
 
-        private string GetUserName(string email)
+        private bool AuthenticateAdmin(string username, string password)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            try
             {
-                string query = "SELECT FullName FROM Users WHERE Email = @Email";
-
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    cmd.Parameters.AddWithValue("@Email", email);
+                    string query = @"SELECT AdminUserID, Username, Email, FullName, Role 
+                                   FROM AdminUsers 
+                                   WHERE (Username = @Username OR Email = @Username) 
+                                   AND Password = @Password AND IsActive = 1";
 
-                    conn.Open();
-                    object result = cmd.ExecuteScalar();
-                    return result != null ? result.ToString() : string.Empty;
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Username", username);
+                        cmd.Parameters.AddWithValue("@Password", password);
+
+                        conn.Open();
+                        SqlDataReader reader = cmd.ExecuteReader();
+
+                        if (reader.Read())
+                        {
+                            // SET ADMIN SESSION VARIABLES
+                            Session["AdminUserID"] = Convert.ToInt32(reader["AdminUserID"]);
+                            Session["AdminName"] = reader["FullName"].ToString();
+                            Session["AdminRole"] = reader["Role"].ToString();
+                            Session["AdminUsername"] = reader["Username"].ToString();
+                            Session["UserType"] = "Admin";
+                            Session["LastActivity"] = DateTime.Now;
+
+                            // Update last login
+                            UpdateAdminLastLogin(Convert.ToInt32(reader["AdminUserID"]));
+
+                            // Log login activity
+                            LogLoginActivity(reader["Username"].ToString(), "Admin");
+
+                            System.Diagnostics.Debug.WriteLine($"Admin session set: Username={reader["Username"]}, AdminID={reader["AdminUserID"]}");
+
+                            return true;
+                        }
+                        else
+                        {
+                            // Admin not found
+                            System.Diagnostics.Debug.WriteLine("Admin not found with username: " + username);
+                            return false;
+                        }
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                System.Diagnostics.Debug.WriteLine($"Admin login error: {ex.Message}");
+                return false;
             }
         }
 
@@ -232,18 +266,40 @@ namespace JivanBandhan4
             }
         }
 
-        private void LogLoginActivity(string email)
+        private void UpdateAdminLastLogin(int adminUserID)
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    string query = @"INSERT INTO LoginLogs (UserEmail, LoginTime, IPAddress, UserAgent) 
-                                   VALUES (@UserEmail, GETDATE(), @IPAddress, @UserAgent)";
+                    string query = "UPDATE AdminUsers SET LastLogin = GETDATE() WHERE AdminUserID = @AdminUserID";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@AdminUserID", adminUserID);
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"UpdateAdminLastLogin error: {ex.Message}");
+            }
+        }
+
+        private void LogLoginActivity(string username, string userType)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    string query = @"INSERT INTO LoginLogs (Username, UserType, LoginTime, IPAddress, UserAgent) 
+                                   VALUES (@Username, @UserType, GETDATE(), @IPAddress, @UserAgent)";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@UserEmail", email);
+                        cmd.Parameters.AddWithValue("@Username", username);
+                        cmd.Parameters.AddWithValue("@UserType", userType);
                         cmd.Parameters.AddWithValue("@IPAddress", GetClientIPAddress());
                         cmd.Parameters.AddWithValue("@UserAgent", Request.UserAgent ?? string.Empty);
 
@@ -259,18 +315,18 @@ namespace JivanBandhan4
             }
         }
 
-        private void LogFailedLoginAttempt(string email)
+        private void LogFailedLoginAttempt(string username)
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    string query = @"INSERT INTO FailedLoginAttempts (Email, AttemptTime, IPAddress) 
-                                   VALUES (@Email, GETDATE(), @IPAddress)";
+                    string query = @"INSERT INTO FailedLoginAttempts (Username, AttemptTime, IPAddress) 
+                                   VALUES (@Username, GETDATE(), @IPAddress)";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@Email", email);
+                        cmd.Parameters.AddWithValue("@Username", username);
                         cmd.Parameters.AddWithValue("@IPAddress", GetClientIPAddress());
 
                         conn.Open();
@@ -296,16 +352,18 @@ namespace JivanBandhan4
             return ipAddress ?? "Unknown";
         }
 
-        private bool IsValidEmail(string email)
+        private void RedirectToDashboard()
         {
-            try
+            if (Session["UserType"] != null)
             {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
+                if (Session["UserType"].ToString() == "Admin")
+                {
+                    Response.Redirect("AdminDashboard.aspx");
+                }
+                else
+                {
+                    Response.Redirect("Dashboard.aspx");
+                }
             }
         }
 
@@ -317,7 +375,7 @@ namespace JivanBandhan4
 
             // Auto hide after 5 seconds
             ScriptManager.RegisterStartupScript(this, this.GetType(), "HideError",
-                $"setTimeout(function() {{ document.getElementById('{pnlError.ClientID}').style.display = 'none'; }}, 5000);", true);
+                $"setTimeout(function() {{ var panel = document.getElementById('{pnlError.ClientID}'); if(panel) panel.style.display = 'none'; }}, 5000);", true);
         }
 
         private void ShowSuccess(string message)
@@ -328,7 +386,7 @@ namespace JivanBandhan4
 
             // Auto hide after 5 seconds
             ScriptManager.RegisterStartupScript(this, this.GetType(), "HideSuccess",
-                $"setTimeout(function() {{ document.getElementById('{pnlSuccess.ClientID}').style.display = 'none'; }}, 5000);", true);
+                $"setTimeout(function() {{ var panel = document.getElementById('{pnlSuccess.ClientID}'); if(panel) panel.style.display = 'none'; }}, 5000);", true);
         }
 
         // Session timeout check
@@ -348,6 +406,7 @@ namespace JivanBandhan4
         }
     }
 }
+
 
 
 
@@ -701,14 +760,6 @@ namespace JivanBandhan4
 //            // Auto hide after 5 seconds
 //            ScriptManager.RegisterStartupScript(this, this.GetType(), "HideSuccess",
 //                $"setTimeout(function() {{ document.getElementById('{pnlSuccess.ClientID}').style.display = 'none'; }}, 5000);", true);
-//        }
-
-//        // Auto-login for demo accounts (optional feature)
-//        protected void AutoLoginDemoAccount(string email, string password)
-//        {
-//            txtEmail.Text = email;
-//            txtPassword.Text = password;
-//            btnLogin_Click(null, null);
 //        }
 
 //        // Session timeout check

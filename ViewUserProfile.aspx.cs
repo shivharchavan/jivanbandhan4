@@ -1,4 +1,7 @@
-﻿using System;
+﻿
+
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -94,7 +97,7 @@ namespace JivanBandhan4
                             }
 
                             // Height
-                            lblHeight.Text = reader["Height"] != DBNull.Value ? reader["Height"].ToString() : "Not specified";
+                            lblHeight.Text = reader["Height"] != DBNull.Value ? reader["Height"].ToString() + " cm" : "Not specified";
 
                             // Religion and Caste
                             lblReligion.Text = reader["Religion"] != DBNull.Value ? reader["Religion"].ToString() : "Not specified";
@@ -148,7 +151,22 @@ namespace JivanBandhan4
 
                             // Career details
                             lblOccupationField.Text = reader["OccupationField"] != DBNull.Value ? reader["OccupationField"].ToString() : "Not specified";
-                            lblAnnualIncome.Text = reader["AnnualIncome"] != DBNull.Value ? reader["AnnualIncome"].ToString() : "Not specified";
+
+                            // Format annual income
+                            if (reader["AnnualIncome"] != DBNull.Value && !string.IsNullOrEmpty(reader["AnnualIncome"].ToString()))
+                            {
+                                decimal income = Convert.ToDecimal(reader["AnnualIncome"]);
+                                if (income >= 10000000)
+                                    lblAnnualIncome.Text = (income / 10000000).ToString("0.0") + " Cr+";
+                                else if (income >= 100000)
+                                    lblAnnualIncome.Text = (income / 100000).ToString("0.0") + " Lakhs+";
+                                else
+                                    lblAnnualIncome.Text = "₹" + income.ToString("N0");
+                            }
+                            else
+                            {
+                                lblAnnualIncome.Text = "Not specified";
+                            }
 
                             // Family information
                             lblFamilyType.Text = reader["FamilyType"] != DBNull.Value ? reader["FamilyType"].ToString() : "Not specified";
@@ -414,9 +432,10 @@ namespace JivanBandhan4
                     conn.Open();
 
                     // Get current user's membership
-                    string membershipQuery = @"SELECT ISNULL(MembershipType, 'Free') as MembershipType 
+                    string membershipQuery = @"SELECT TOP 1 MembershipType 
                                              FROM UserMemberships 
-                                             WHERE UserID = @CurrentUserID AND ExpiryDate > GETDATE()";
+                                             WHERE UserID = @CurrentUserID AND ExpiryDate > GETDATE()
+                                             ORDER BY ExpiryDate DESC";
 
                     string currentUserMembership = "Free";
                     using (SqlCommand membershipCmd = new SqlCommand(membershipQuery, conn))
@@ -756,6 +775,8 @@ namespace JivanBandhan4
 
 
 
+
+
 //using System;
 //using System.Collections.Generic;
 //using System.Data;
@@ -765,16 +786,13 @@ namespace JivanBandhan4
 //using System.Web.UI;
 //using System.Web.UI.HtmlControls;
 //using System.Web.UI.WebControls;
+//using Newtonsoft.Json;
 
 //namespace JivanBandhan4
 //{
 //    public partial class ViewUserProfile : System.Web.UI.Page
 //    {
 //        string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=jivanbandhan;Integrated Security=True";
-
-//        // Add these protected declarations to match the aspx page
-//        protected global::System.Web.UI.WebControls.HiddenField hdnViewedUserGender;
-//        protected global::System.Web.UI.WebControls.HiddenField hdnCurrentUserGender;
 
 //        protected void Page_Load(object sender, EventArgs e)
 //        {
@@ -840,21 +858,18 @@ namespace JivanBandhan4
 //                            // Set basic information
 //                            lblFullName.Text = reader["FullName"].ToString();
 //                            lblPersonalFullName.Text = reader["FullName"].ToString();
-
-//                            // Store viewed user's gender in hidden field
-//                            if (hdnViewedUserGender != null)
-//                            {
-//                                hdnViewedUserGender.Value = reader["Gender"] != DBNull.Value ? reader["Gender"].ToString() : "";
-//                            }
+//                            lblFlipName.Text = reader["FullName"].ToString();
 
 //                            // Age
 //                            if (reader["Age"] != DBNull.Value)
 //                            {
 //                                lblAge.Text = reader["Age"].ToString();
+//                                lblFlipAge.Text = reader["Age"].ToString();
 //                            }
 //                            else
 //                            {
 //                                lblAge.Text = "Not specified";
+//                                lblFlipAge.Text = "Not specified";
 //                            }
 
 //                            // Height
@@ -869,11 +884,14 @@ namespace JivanBandhan4
 //                            // Location
 //                            string city = reader["City"] != DBNull.Value ? reader["City"].ToString() : "";
 //                            string state = reader["State"] != DBNull.Value ? reader["State"].ToString() : "";
-//                            lblLocation.Text = $"{city}, {state}";
+//                            string country = reader["Country"] != DBNull.Value ? reader["Country"].ToString() : "";
+//                            lblLocation.Text = !string.IsNullOrEmpty(city) ? $"{city}, {state}" : "Not specified";
+//                            lblFlipLocation.Text = lblLocation.Text;
 
 //                            // Occupation and Education
 //                            lblOccupation.Text = reader["Occupation"] != DBNull.Value ? reader["Occupation"].ToString() : "Not specified";
 //                            lblCareerOccupation.Text = lblOccupation.Text;
+//                            lblFlipOccupation.Text = lblOccupation.Text;
 //                            lblEducation.Text = reader["Education"] != DBNull.Value ? reader["Education"].ToString() : "Not specified";
 //                            lblHighestEducation.Text = lblEducation.Text;
 
@@ -918,9 +936,6 @@ namespace JivanBandhan4
 
 //                            // Load profile photo
 //                            LoadProfilePhoto(userID, imgProfileLarge);
-
-//                            // Set flip photo data
-//                            SetFlipPhotoData();
 //                        }
 //                        else
 //                        {
@@ -933,84 +948,6 @@ namespace JivanBandhan4
 //            {
 //                System.Diagnostics.Debug.WriteLine("LoadUserProfile error: " + ex.Message);
 //                Response.Redirect("Dashboard.aspx");
-//            }
-//        }
-
-//        private void CheckPlatinumMembershipAndShowContact(int currentUserID, int viewedUserID)
-//        {
-//            try
-//            {
-//                using (SqlConnection conn = new SqlConnection(connectionString))
-//                {
-//                    conn.Open();
-
-//                    // Get current user's membership
-//                    string membershipQuery = @"SELECT ISNULL(MembershipType, 'Free') as MembershipType 
-//                                             FROM UserMemberships 
-//                                             WHERE UserID = @CurrentUserID AND ExpiryDate > GETDATE()";
-
-//                    string currentUserMembership = "Free";
-//                    using (SqlCommand membershipCmd = new SqlCommand(membershipQuery, conn))
-//                    {
-//                        membershipCmd.Parameters.AddWithValue("@CurrentUserID", currentUserID);
-//                        object result = membershipCmd.ExecuteScalar();
-//                        if (result != null)
-//                        {
-//                            currentUserMembership = result.ToString();
-//                        }
-//                    }
-
-//                    // Check if current user has PLATINUM membership - ONLY PLATINUM
-//                    bool canViewContact = currentUserMembership == "Platinum";
-
-//                    if (canViewContact)
-//                    {
-//                        // Get viewed user's contact number
-//                        string contactQuery = "SELECT Phone FROM Users WHERE UserID = @ViewedUserID";
-//                        using (SqlCommand contactCmd = new SqlCommand(contactQuery, conn))
-//                        {
-//                            contactCmd.Parameters.AddWithValue("@ViewedUserID", viewedUserID);
-//                            object contactResult = contactCmd.ExecuteScalar();
-
-//                            if (contactResult != null && contactResult != DBNull.Value && !string.IsNullOrEmpty(contactResult.ToString()))
-//                            {
-//                                string contactNumber = contactResult.ToString();
-
-//                                // Show platinum badge and contact number panel
-//                                pnlPlatinumBadge.Visible = true;
-//                                pnlContactNumber.Visible = true;
-//                                lblContactNumber.Text = contactNumber;
-
-//                                // Hide other panels
-//                                pnlContactRestricted.Visible = false;
-//                                pnlPlatinumInfo.Visible = false;
-//                            }
-//                            else
-//                            {
-//                                pnlContactNumber.Visible = false;
-//                                pnlContactRestricted.Visible = true;
-//                                pnlContactRestricted.Controls.Clear();
-//                                pnlContactRestricted.Controls.Add(new LiteralControl("<i class='fas fa-info-circle'></i> Contact number not available"));
-//                            }
-//                        }
-//                    }
-//                    else
-//                    {
-//                        // Not a PLATINUM member
-//                        pnlPlatinumBadge.Visible = false;
-//                        pnlContactNumber.Visible = false;
-//                        pnlPlatinumInfo.Visible = true;
-//                        pnlContactRestricted.Visible = false;
-//                    }
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                System.Diagnostics.Debug.WriteLine("CheckPlatinumMembershipAndShowContact error: " + ex.Message);
-//                // Don't show contact number panels if there's an error
-//                pnlPlatinumBadge.Visible = false;
-//                pnlContactNumber.Visible = false;
-//                pnlPlatinumInfo.Visible = true;
 //            }
 //        }
 
@@ -1061,14 +998,14 @@ namespace JivanBandhan4
 //                        if (photos.Count > 0)
 //                        {
 //                            // Store photos in hidden field for JavaScript
-//                            hdnUserPhotos.Value = Newtonsoft.Json.JsonConvert.SerializeObject(photos);
+//                            hdnUserPhotos.Value = JsonConvert.SerializeObject(photos);
 
 //                            // Generate HTML for photo gallery
 //                            StringBuilder galleryHtml = new StringBuilder();
 //                            for (int i = 0; i < photos.Count; i++)
 //                            {
 //                                galleryHtml.Append($@"
-//                                    <div class='gallery-item' onclick='openModal({i})'>
+//                                    <div class='gallery-item'>
 //                                        <img src='{photos[i].Url}' alt='{photos[i].Title}' class='gallery-photo' 
 //                                             onerror='this.src=""Images/default-profile.jpg""' />
 //                                        <div class='photo-overlay'>
@@ -1176,15 +1113,6 @@ namespace JivanBandhan4
 //            }
 //        }
 
-//        // Set data for flip photo back side
-//        private void SetFlipPhotoData()
-//        {
-//            lblFlipName.Text = lblFullName.Text;
-//            lblFlipAge.Text = lblAge.Text;
-//            lblFlipLocation.Text = lblLocation.Text;
-//            lblFlipOccupation.Text = lblOccupation.Text;
-//        }
-
 //        private void UpdateProfileViewCount(int viewedUserID)
 //        {
 //            try
@@ -1253,6 +1181,88 @@ namespace JivanBandhan4
 //            catch (Exception ex)
 //            {
 //                System.Diagnostics.Debug.WriteLine("CheckUserActions error: " + ex.Message);
+//            }
+//        }
+
+//        private void CheckPlatinumMembershipAndShowContact(int currentUserID, int viewedUserID)
+//        {
+//            try
+//            {
+//                using (SqlConnection conn = new SqlConnection(connectionString))
+//                {
+//                    conn.Open();
+
+//                    // Get current user's membership
+//                    string membershipQuery = @"SELECT ISNULL(MembershipType, 'Free') as MembershipType 
+//                                             FROM UserMemberships 
+//                                             WHERE UserID = @CurrentUserID AND ExpiryDate > GETDATE()";
+
+//                    string currentUserMembership = "Free";
+//                    using (SqlCommand membershipCmd = new SqlCommand(membershipQuery, conn))
+//                    {
+//                        membershipCmd.Parameters.AddWithValue("@CurrentUserID", currentUserID);
+//                        object result = membershipCmd.ExecuteScalar();
+//                        if (result != null)
+//                        {
+//                            currentUserMembership = result.ToString();
+//                        }
+//                    }
+
+//                    // Check if current user has PLATINUM membership - ONLY PLATINUM
+//                    bool canViewContact = currentUserMembership.Equals("Platinum", StringComparison.OrdinalIgnoreCase);
+
+//                    if (canViewContact)
+//                    {
+//                        // Get viewed user's contact number
+//                        string contactQuery = "SELECT Phone FROM Users WHERE UserID = @ViewedUserID";
+//                        using (SqlCommand contactCmd = new SqlCommand(contactQuery, conn))
+//                        {
+//                            contactCmd.Parameters.AddWithValue("@ViewedUserID", viewedUserID);
+//                            object contactResult = contactCmd.ExecuteScalar();
+
+//                            if (contactResult != null && contactResult != DBNull.Value && !string.IsNullOrEmpty(contactResult.ToString()))
+//                            {
+//                                string contactNumber = contactResult.ToString();
+
+//                                // Show platinum badge and contact number panel
+//                                pnlPlatinumBadge.Visible = true;
+//                                pnlContactNumber.Visible = true;
+//                                lblContactNumber.Text = contactNumber;
+
+//                                // Show in basic info panel as well
+//                                pnlPhoneBasicInfo.Visible = true;
+//                                lblPhone.Text = contactNumber;
+
+//                                // Hide other panels
+//                                pnlContactRestricted.Visible = false;
+//                                pnlPlatinumInfo.Visible = false;
+//                            }
+//                            else
+//                            {
+//                                pnlContactNumber.Visible = false;
+//                                pnlContactRestricted.Visible = true;
+//                                pnlContactRestricted.Controls.Clear();
+//                                pnlContactRestricted.Controls.Add(new LiteralControl("<i class='fas fa-info-circle'></i> Contact number not available"));
+//                            }
+//                        }
+//                    }
+//                    else
+//                    {
+//                        // Not a PLATINUM member
+//                        pnlPlatinumBadge.Visible = false;
+//                        pnlContactNumber.Visible = false;
+//                        pnlPlatinumInfo.Visible = true;
+//                        pnlContactRestricted.Visible = false;
+//                    }
+//                }
+//            }
+//            catch (Exception ex)
+//            {
+//                System.Diagnostics.Debug.WriteLine("CheckPlatinumMembershipAndShowContact error: " + ex.Message);
+//                // Don't show contact number panels if there's an error
+//                pnlPlatinumBadge.Visible = false;
+//                pnlContactNumber.Visible = false;
+//                pnlPlatinumInfo.Visible = true;
 //            }
 //        }
 
@@ -1505,5 +1515,6 @@ namespace JivanBandhan4
 //        }
 //    }
 //}
+
 
 

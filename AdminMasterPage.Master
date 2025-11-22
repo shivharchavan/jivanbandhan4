@@ -1,0 +1,326 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="AdminMasterPage.master.cs" Inherits="JivanBandhan4.Admin.AdminMasterPage" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title><asp:ContentPlaceHolder ID="Title" runat="server"></asp:ContentPlaceHolder></title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
+    <style>
+        .admin-sidebar {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            min-height: 100vh;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 280px;
+            z-index: 1000;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 280px;
+            z-index: 999;
+            height: 70px;
+        }
+        
+        .admin-main {
+            margin-left: 280px;
+            margin-top: 70px;
+            padding: 20px;
+            background: #f8f9fa;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .sidebar-brand {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .menu-item:hover, .menu-item.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left-color: #3498db;
+        }
+        
+        .menu-item i {
+            width: 20px;
+            margin-right: 10px;
+            text-align: center;
+        }
+        
+        .submenu {
+            padding-left: 40px;
+            background: rgba(0,0,0,0.1);
+        }
+        
+        .user-info {
+            color: white;
+            padding: 15px 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .admin-sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .admin-header {
+                left: 0;
+            }
+            
+            .admin-main {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <!-- Sidebar -->
+        <div class="admin-sidebar" id="adminSidebar">
+            <div class="sidebar-brand">
+                <h4 class="text-white mb-0">JivanBandhan</h4>
+                <small class="text-white-50">Admin Panel</small>
+            </div>
+            
+            <div class="sidebar-menu">
+                <!-- Dashboard -->
+                <asp:HyperLink ID="lnkDashboard" runat="server" NavigateUrl="~/Admin/AdminDashboard.aspx" 
+                    CssClass="menu-item" Text="Dashboard"></asp:HyperLink>
+                
+                <!-- User Management -->
+                <a href="#userManagement" class="menu-item" data-bs-toggle="collapse">
+                    <i class="fas fa-users"></i> User Management
+                    <i class="fas fa-chevron-down ms-auto"></i>
+                </a>
+                <div class="collapse submenu" id="userManagement">
+                    <asp:HyperLink ID="lnkAllUsers" runat="server" NavigateUrl="~/Admin/UserManagement.aspx" 
+                        CssClass="menu-item" Text="All Users"></asp:HyperLink>
+                    <asp:HyperLink ID="lnkAddUser" runat="server" NavigateUrl="~/Admin/AddUser.aspx" 
+                        CssClass="menu-item" Text="Add New User"></asp:HyperLink>
+                    <asp:HyperLink ID="lnkBlockedUsers" runat="server" NavigateUrl="~/Admin/BlockedUsers.aspx" 
+                        CssClass="menu-item" Text="Blocked Users"></asp:HyperLink>
+                </div>
+                
+                <!-- Profile Verification -->
+                <asp:HyperLink ID="lnkProfileVerification" runat="server" NavigateUrl="~/Admin/ProfileVerification.aspx" 
+                    CssClass="menu-item" Text="Profile Verification"></asp:HyperLink>
+                
+                <!-- Membership Management -->
+                <a href="#membership" class="menu-item" data-bs-toggle="collapse">
+                    <i class="fas fa-crown"></i> Membership
+                    <i class="fas fa-chevron-down ms-auto"></i>
+                </a>
+                <div class="collapse submenu" id="membership">
+                    <asp:HyperLink ID="lnkMembershipPlans" runat="server" NavigateUrl="~/Admin/MembershipPlans.aspx" 
+                        CssClass="menu-item" Text="Membership Plans"></asp:HyperLink>
+                    <asp:HyperLink ID="lnkActiveMemberships" runat="server" NavigateUrl="~/Admin/ActiveMemberships.aspx" 
+                        CssClass="menu-item" Text="Active Memberships"></asp:HyperLink>
+                </div>
+                
+                <!-- Payments -->
+                <asp:HyperLink ID="lnkPaymentHistory" runat="server" NavigateUrl="~/Admin/PaymentHistory.aspx" 
+                    CssClass="menu-item" Text="Payment History"></asp:HyperLink>
+                
+                <!-- Photo Management -->
+                <asp:HyperLink ID="lnkPhotoManagement" runat="server" NavigateUrl="~/Admin/PhotoManagement.aspx" 
+                    CssClass="menu-item" Text="Photo Management"></asp:HyperLink>
+                
+                <!-- Reported Profiles -->
+                <asp:HyperLink ID="lnkReportedProfiles" runat="server" NavigateUrl="~/Admin/ReportedProfiles.aspx" 
+                    CssClass="menu-item" Text="Reported Profiles"></asp:HyperLink>
+                
+                <!-- CMS Pages -->
+                <asp:HyperLink ID="lnkCMSPages" runat="server" NavigateUrl="~/Admin/CMSPages.aspx" 
+                    CssClass="menu-item" Text="CMS Pages"></asp:HyperLink>
+                
+                <!-- Email Templates -->
+                <asp:HyperLink ID="lnkEmailTemplates" runat="server" NavigateUrl="~/Admin/EmailTemplates.aspx" 
+                    CssClass="menu-item" Text="Email Templates"></asp:HyperLink>
+                
+                <!-- Contact Inquiries -->
+                <asp:HyperLink ID="lnkContactInquiries" runat="server" NavigateUrl="~/Admin/ContactInquiries.aspx" 
+                    CssClass="menu-item" Text="Contact Inquiries"></asp:HyperLink>
+                
+                <!-- Reports & Analytics -->
+                <asp:HyperLink ID="lnkReports" runat="server" NavigateUrl="~/Admin/Reports.aspx" 
+                    CssClass="menu-item" Text="Reports &amp; Analytics"></asp:HyperLink>
+                
+                <!-- System Settings -->
+                <a href="#settings" class="menu-item" data-bs-toggle="collapse">
+                    <i class="fas fa-cog"></i> Settings
+                    <i class="fas fa-chevron-down ms-auto"></i>
+                </a>
+                <div class="collapse submenu" id="settings">
+                    <asp:HyperLink ID="lnkAdminUsers" runat="server" NavigateUrl="~/Admin/AdminUsers.aspx" 
+                        CssClass="menu-item" Text="Admin Users"></asp:HyperLink>
+                    <asp:HyperLink ID="lnkBackup" runat="server" NavigateUrl="~/Admin/BackupRestore.aspx" 
+                        CssClass="menu-item" Text="Backup &amp; Restore"></asp:HyperLink>
+                    <asp:HyperLink ID="lnkSystemSettings" runat="server" NavigateUrl="~/Admin/SystemSettings.aspx" 
+                        CssClass="menu-item" Text="System Settings"></asp:HyperLink>
+                </div>
+            </div>
+            
+            <div class="user-info">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <div class="fw-bold"><asp:Label ID="lblAdminUserName" runat="server" Text="Admin User"></asp:Label></div>
+                        <small class="text-white-50"><asp:Label ID="lblAdminRole" runat="server" Text="Super Admin"></asp:Label></small>
+                    </div>
+                    <asp:LinkButton ID="btnLogout" runat="server" CssClass="btn btn-sm btn-outline-light" 
+                        OnClick="btnLogout_Click" Text="Logout"></asp:LinkButton>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="admin-header">
+            <div class="container-fluid">
+                <div class="row align-items-center" style="height: 70px;">
+                    <div class="col">
+                        <button class="btn btn-light d-md-none" type="button" onclick="toggleSidebar()">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <h4 class="text-white mb-0 d-none d-md-inline">
+                            <asp:ContentPlaceHolder ID="HeaderTitle" runat="server"></asp:ContentPlaceHolder>
+                        </h4>
+                    </div>
+                    <div class="col-auto">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="text-white">
+                                <i class="fas fa-bell"></i>
+                                <span class="badge bg-danger">3</span>
+                            </span>
+                            <div class="dropdown">
+                                <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-circle me-2"></i>
+                                    <asp:Label ID="lblHeaderAdminName" runat="server" Text="Admin"></asp:Label>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <asp:LinkButton ID="btnHeaderLogout" runat="server" CssClass="dropdown-item" 
+                                            OnClick="btnLogout_Click">
+                                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                        </asp:LinkButton>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-main">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+        </div>
+
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+
+
+            // Add this function to your AdminMasterPage.master
+            function showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 10px;
+        color: white;
+        font-weight: bold;
+        z-index: 10000;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+        max-width: 400px;
+        word-wrap: break-word;
+        animation: slideInRight 0.3s ease;
+    `;
+
+                if (type === 'success') {
+                    notification.style.background = 'rgba(40, 167, 69, 0.9)';
+                } else if (type === 'error') {
+                    notification.style.background = 'rgba(220, 53, 69, 0.9)';
+                } else if (type === 'info') {
+                    notification.style.background = 'rgba(23, 162, 184, 0.9)';
+                } else if (type === 'warning') {
+                    notification.style.background = 'rgba(255, 193, 7, 0.9)';
+                }
+
+                notification.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+
+                document.body.appendChild(notification);
+
+                // Auto remove after 4 seconds
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        notification.style.animation = 'slideInRight 0.3s ease reverse';
+                        setTimeout(() => {
+                            if (document.body.contains(notification)) {
+                                document.body.removeChild(notification);
+                            }
+                        }, 300);
+                    }
+                }, 4000);
+            }
+
+
+
+            function toggleSidebar() {
+                document.getElementById('adminSidebar').classList.toggle('mobile-open');
+            }
+
+            // Set active menu item
+            document.addEventListener('DOMContentLoaded', function () {
+                var currentPage = window.location.pathname.split('/').pop();
+                var menuItems = document.querySelectorAll('.menu-item');
+
+                menuItems.forEach(function (item) {
+                    if (item.getAttribute('href') === currentPage) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+        </script>
+    </form>
+</body>
+</html>

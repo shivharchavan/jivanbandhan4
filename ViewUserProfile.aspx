@@ -1,4 +1,5 @@
-﻿<%@ Page Title="Marathi Matrimony - View Profile" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeBehind="ViewUserProfile.aspx.cs" Inherits="JivanBandhan4.ViewUserProfile" %>
+﻿
+<%@ Page Title="Marathi Matrimony - View Profile" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeBehind="ViewUserProfile.aspx.cs" Inherits="JivanBandhan4.ViewUserProfile" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <style>
@@ -1632,6 +1633,8 @@
 
 
 
+
+
 <%--<%@ Page Title="Marathi Matrimony - View Profile" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeBehind="ViewUserProfile.aspx.cs" Inherits="JivanBandhan4.ViewUserProfile" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -2017,7 +2020,7 @@
             background: #6c757d;
         }
 
-        /* Photo Gallery Styles */
+        /* Photo Gallery Styles - IMPROVED */
         .photo-gallery-section {
             margin: 30px 0;
         }
@@ -2092,8 +2095,8 @@
             transform: translateY(0);
         }
 
-        /* Fullscreen Modal Styles */
-        .modal {
+        /* IMPROVED Fullscreen Modal Styles */
+        .photo-modal {
             display: none;
             position: fixed;
             z-index: 10000;
@@ -2103,25 +2106,36 @@
             height: 100%;
             background: rgba(0,0,0,0.95);
             backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
         }
 
-        .modal-content {
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content-wrapper {
             position: relative;
-            margin: auto;
-            display: block;
-            width: auto;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-image {
             max-width: 90%;
             max-height: 90%;
-            top: 50%;
-            transform: translateY(-50%);
-            border-radius: 15px;
+            object-fit: contain;
+            border-radius: 10px;
             box-shadow: 0 25px 80px rgba(0,0,0,0.5);
             animation: zoomIn 0.3s ease;
         }
 
         @keyframes zoomIn {
-            from { transform: translateY(-50%) scale(0.7); opacity: 0; }
-            to { transform: translateY(-50%) scale(1); opacity: 1; }
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
         .close-modal {
@@ -2141,11 +2155,13 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
         }
 
         .close-modal:hover {
             background: rgba(220, 53, 69, 0.8);
             transform: scale(1.1);
+            border-color: rgba(255,255,255,0.5);
         }
 
         .modal-nav {
@@ -2159,39 +2175,53 @@
             padding: 15px;
             cursor: pointer;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+            z-index: 10001;
         }
 
         .modal-nav:hover {
             background: rgba(255,255,255,0.3);
             transform: translateY(-50%) scale(1.1);
+            border-color: rgba(255,255,255,0.5);
         }
 
         .prev-nav {
-            left: 20px;
+            left: 30px;
         }
 
         .next-nav {
-            right: 20px;
+            right: 30px;
         }
 
         .modal-counter {
             position: absolute;
-            bottom: 20px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             color: white;
-            background: rgba(0,0,0,0.5);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
+            background: rgba(0,0,0,0.7);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
             backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            z-index: 10001;
+        }
+
+        .modal-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.2rem;
         }
 
         .no-photos-message {
@@ -2207,6 +2237,18 @@
             font-size: 3rem;
             margin-bottom: 15px;
             color: #adb5bd;
+        }
+
+        /* Loading animation for images */
+        .image-loading {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         @keyframes pulse-online {
@@ -2242,6 +2284,28 @@
             .photo-gallery {
                 grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             }
+
+            .modal-nav {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .prev-nav {
+                left: 15px;
+            }
+
+            .next-nav {
+                right: 15px;
+            }
+
+            .close-modal {
+                top: 15px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 35px;
+            }
         }
         
         @media (max-width: 768px) {
@@ -2266,21 +2330,52 @@
                 font-size: 1.7rem;
             }
             
-            .modal-content {
+            .modal-image {
                 max-width: 95%;
-                max-height: 80%;
+                max-height: 85%;
             }
-            
+
+            .modal-nav {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+                padding: 12px;
+            }
+
+            .modal-counter {
+                bottom: 20px;
+                font-size: 0.9rem;
+                padding: 8px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .photo-gallery {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 10px;
+            }
+
             .modal-nav {
                 width: 40px;
                 height: 40px;
-                font-size: 20px;
+                font-size: 16px;
+                padding: 10px;
             }
-            
+
+            .prev-nav {
+                left: 10px;
+            }
+
+            .next-nav {
+                right: 10px;
+            }
+
             .close-modal {
-                font-size: 30px;
                 width: 40px;
                 height: 40px;
+                font-size: 30px;
+                top: 10px;
+                right: 15px;
             }
         }
     </style>
@@ -2332,8 +2427,7 @@
                             <div class="profile-photo-front">
                                 <asp:Image ID="imgProfileLarge" runat="server" CssClass="user-photo-extra-large" 
                                     ImageUrl="~/Images/default-profile.jpg" 
-                                    onerror="this.src='Images/default-profile.jpg'"
-                                    onclick="openModal(0)" />
+                                    onerror="this.src='Images/default-profile.jpg'"/>
                             </div>
                             <div class="profile-photo-back">
                                 <div class="profile-photo-back-content">
@@ -2625,13 +2719,23 @@
         </div>
     </div>
 
-    <!-- Fullscreen Photo Modal -->
-    <div id="photoModal" class="modal">
-        <span class="close-modal" onclick="closeModal()">&times;</span>
-        <button class="modal-nav prev-nav" onclick="changePhoto(-1)">&#10094;</button>
-        <button class="modal-nav next-nav" onclick="changePhoto(1)">&#10095;</button>
-        <img class="modal-content" id="modalImage">
-        <div class="modal-counter" id="modalCounter">1 / 1</div>
+    <!-- IMPROVED Fullscreen Photo Modal -->
+    <div id="photoModal" class="photo-modal">
+        <div class="modal-content-wrapper">
+            <span class="close-modal" onclick="closePhotoModal()">&times;</span>
+            <button class="modal-nav prev-nav" onclick="changePhoto(-1)">&#10094;</button>
+            <button class="modal-nav next-nav" onclick="changePhoto(1)">&#10095;</button>
+            
+            <div class="modal-loader" id="modalLoader" style="display: none;">
+                <i class="fas fa-spinner fa-spin"></i> Loading...
+            </div>
+            
+            <img class="modal-image" id="modalImage" 
+                 onload="hideLoader()" 
+                 onerror="this.src='Images/default-profile.jpg'; hideLoader()" />
+                 
+            <div class="modal-counter" id="modalCounter">1 / 1</div>
+        </div>
     </div>
 
     <!-- Hidden Fields -->
@@ -2649,37 +2753,60 @@
         // Initialize photo gallery from hidden field
         function initializePhotoGallery() {
             const photosData = document.getElementById('<%= hdnUserPhotos.ClientID %>').value;
-            const profilePhotoUrl = document.getElementById('<%= imgProfileLarge.ClientID %>').src;
 
-            if (photosData) {
-                userPhotos = JSON.parse(photosData);
+            if (photosData && photosData !== '[]' && photosData !== '') {
+                try {
+                    userPhotos = JSON.parse(photosData);
+                } catch (e) {
+                    console.error("Error parsing photos data:", e);
+                    userPhotos = [];
+                }
+            } else {
+                userPhotos = [];
             }
 
             // Always include profile photo as first image
-            if (profilePhotoUrl && !userPhotos.some(photo => photo.url === profilePhotoUrl)) {
-                userPhotos.unshift({
-                    url: profilePhotoUrl,
-                    title: 'Profile Photo',
-                    IsProfilePhoto: true
-                });
+            const profilePhotoUrl = document.getElementById('<%= imgProfileLarge.ClientID %>').src;
+
+            if (profilePhotoUrl && !profilePhotoUrl.includes('default-profile.jpg')) {
+                // Check if profile photo already exists in userPhotos
+                const profilePhotoExists = userPhotos.some(photo =>
+                    photo.url === profilePhotoUrl || photo.IsProfilePhoto
+                );
+
+                if (!profilePhotoExists) {
+                    userPhotos.unshift({
+                        url: profilePhotoUrl,
+                        title: 'Profile Photo',
+                        IsProfilePhoto: true
+                    });
+                }
             }
+
+            // Update hidden field with corrected data
+            document.getElementById('<%= hdnUserPhotos.ClientID %>').value = JSON.stringify(userPhotos);
         }
 
-        // Open modal with specific photo - Improved version
-        function openModal(index) {
+        // Show loader
+        function showLoader() {
+            document.getElementById('modalLoader').style.display = 'block';
+        }
+
+        // Hide loader
+        function hideLoader() {
+            document.getElementById('modalLoader').style.display = 'none';
+        }
+
+        // Open modal with specific photo - FIXED VERSION
+        function openPhotoModal(index) {
             if (userPhotos.length === 0) {
-                // If no gallery photos, just open the profile photo
-                const modal = document.getElementById('photoModal');
-                const modalImg = document.getElementById('modalImage');
-                const modalCounter = document.getElementById('modalCounter');
-
-                modal.style.display = 'block';
-                modalImg.src = document.getElementById('<%= imgProfileLarge.ClientID %>').src;
-                modalCounter.textContent = '1 / 1';
-
-                // Prevent body scroll
-                document.body.style.overflow = 'hidden';
+                alert('No photos available to display.');
                 return;
+            }
+
+            // Validate index
+            if (index < 0 || index >= userPhotos.length) {
+                index = 0;
             }
 
             currentPhotoIndex = index;
@@ -2687,23 +2814,37 @@
             const modalImg = document.getElementById('modalImage');
             const modalCounter = document.getElementById('modalCounter');
 
-            modal.style.display = 'block';
-            modalImg.src = userPhotos[currentPhotoIndex].url;
+            // Show loader
+            showLoader();
+
+            // Set image source with cache busting
+            const photoUrl = userPhotos[currentPhotoIndex].url + '?t=' + new Date().getTime();
+            modalImg.src = photoUrl;
             modalCounter.textContent = `${currentPhotoIndex + 1} / ${userPhotos.length}`;
 
-            // Prevent body scroll
+            // Show modal
+            modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
+
+            // Add loading class to image
+            modalImg.classList.add('image-loading');
         }
 
         // Close modal
-        function closeModal() {
+        function closePhotoModal() {
             const modal = document.getElementById('photoModal');
             modal.style.display = 'none';
             document.body.style.overflow = 'auto';
+
+            // Remove loading class
+            const modalImg = document.getElementById('modalImage');
+            modalImg.classList.remove('image-loading');
         }
 
         // Change photo in modal
         function changePhoto(direction) {
+            if (userPhotos.length <= 1) return;
+
             currentPhotoIndex += direction;
 
             // Loop around
@@ -2716,7 +2857,15 @@
             const modalImg = document.getElementById('modalImage');
             const modalCounter = document.getElementById('modalCounter');
 
-            modalImg.src = userPhotos[currentPhotoIndex].url;
+            // Show loader
+            showLoader();
+
+            // Add loading class
+            modalImg.classList.add('image-loading');
+
+            // Change image source with cache busting
+            const photoUrl = userPhotos[currentPhotoIndex].url + '?t=' + new Date().getTime();
+            modalImg.src = photoUrl;
             modalCounter.textContent = `${currentPhotoIndex + 1} / ${userPhotos.length}`;
         }
 
@@ -2725,11 +2874,15 @@
             const modal = document.getElementById('photoModal');
             if (modal.style.display === 'block') {
                 if (event.key === 'Escape') {
-                    closeModal();
+                    closePhotoModal();
                 } else if (event.key === 'ArrowLeft') {
                     changePhoto(-1);
                 } else if (event.key === 'ArrowRight') {
                     changePhoto(1);
+                } else if (event.key === ' ') {
+                    // Space bar to toggle next photo
+                    changePhoto(1);
+                    event.preventDefault();
                 }
             }
         });
@@ -2737,9 +2890,67 @@
         // Close modal when clicking outside image
         document.getElementById('photoModal').addEventListener('click', function (event) {
             if (event.target === this) {
-                closeModal();
+                closePhotoModal();
             }
         });
+
+        // Touch events for mobile swipe
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', function (e) {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        document.addEventListener('touchend', function (e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+
+        function handleSwipe() {
+            const modal = document.getElementById('photoModal');
+            if (modal.style.display !== 'block') return;
+
+            const swipeThreshold = 50;
+
+            if (touchEndX < touchStartX - swipeThreshold) {
+                // Swipe left - next photo
+                changePhoto(1);
+            }
+
+            if (touchEndX > touchStartX + swipeThreshold) {
+                // Swipe right - previous photo
+                changePhoto(-1);
+            }
+        }
+
+        // FIXED: Add click events to gallery items
+        function attachGalleryClickEvents() {
+            const galleryItems = document.querySelectorAll('.gallery-item');
+
+            galleryItems.forEach((item, index) => {
+                // Remove any existing click events and add new one
+                const newItem = item.cloneNode(true);
+                item.parentNode.replaceChild(newItem, item);
+
+                // Add click event to the new item
+                newItem.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openPhotoModal(index);
+                });
+            });
+
+            // Also attach to profile photo flip container
+            const profilePhotoContainer = document.querySelector('.profile-photo-flip-container');
+            if (profilePhotoContainer) {
+                profilePhotoContainer.onclick = function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openPhotoModal(0); // Profile photo is always first
+                };
+            }
+        }
 
         // Send Interest Function
         function sendInterest() {
@@ -2976,6 +3187,7 @@
             notification.style.fontWeight = 'bold';
             notification.style.zIndex = '10000';
             notification.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
+            notification.style.transition = 'all 0.3s ease';
 
             if (type === 'success') {
                 notification.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
@@ -2988,10 +3200,19 @@
             notification.innerHTML = message;
             document.body.appendChild(notification);
 
+            // Animate in
             setTimeout(() => {
-                if (document.body.contains(notification)) {
-                    document.body.removeChild(notification);
-                }
+                notification.style.transform = 'translateX(0)';
+            }, 10);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100px)';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
             }, 3000);
         }
 
@@ -2999,6 +3220,11 @@
         document.addEventListener('DOMContentLoaded', function () {
             // Initialize photo gallery
             initializePhotoGallery();
+            
+            // Attach click events after a short delay to ensure DOM is ready
+            setTimeout(() => {
+                attachGalleryClickEvents();
+            }, 100);
 
             // Set random online status (for demo)
             const onlineStatus = document.getElementById('<%= onlineStatus.ClientID %>');
@@ -3015,6 +3241,17 @@
                 }
             }
         });
+
+        // Additional initialization when window is fully loaded
+        window.addEventListener('load', function () {
+            attachGalleryClickEvents();
+        });
     </script>
 </asp:Content>
+
+
+
+
+
+
 --%>
